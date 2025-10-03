@@ -180,14 +180,21 @@
             animation: spin 200s infinite linear;
         }
 
+        /* 以第二层为中心 - 关键修改 */
+        #spinBox {
+            position: absolute;
+            top: -40%; /* 第一层在上方 */
+        }
+
         #spinBox2 {
             position: absolute;
-            top: 20%;
+            top: 0; /* 第二层在中心 */
+            z-index: 2; /* 确保第二层在最前面 */
         }
 
         #spinBox3 {
             position: absolute;
-            top: -30%;
+            top: 40%; /* 第三层在下方 */
         }
 
         .spinBox img {
@@ -325,7 +332,7 @@
             }
         }
 
-        /* 响应式设计 */
+        /* 响应式设计 - 移动端优化 */
         @media (max-width: 768px) {
             .title {
                 font-size: 1.8rem;
@@ -345,6 +352,94 @@
             .control-btn {
                 width: 35px;
                 height: 35px;
+            }
+            
+            /* 移动端照片墙优化 */
+            #dragBox {
+                transform: rotateX(-20deg) scale(0.9); /* 调整角度和大小 */
+            }
+            
+            .spinBox {
+                width: 100px; /* 缩小照片尺寸 */
+                height: 120px;
+            }
+            
+            /* 移动端层间距调整 */
+            #spinBox {
+                top: -35%; /* 减小层间距 */
+            }
+            
+            #spinBox3 {
+                top: 35%; /* 减小层间距 */
+            }
+            
+            /* 移动端照片反射效果调整 */
+            .spinBox img {
+                -webkit-box-reflect: below 5px linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.2));
+            }
+        }
+
+        /* 小屏幕手机优化 */
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+            
+            .click_me {
+                width: 120px;
+                height: 120px;
+                font-size: 16px;
+            }
+            
+            .controls {
+                bottom: 5px;
+                padding: 6px 12px;
+                gap: 10px;
+            }
+            
+            .control-btn {
+                width: 30px;
+                height: 30px;
+            }
+            
+            /* 小屏幕照片墙优化 */
+            #dragBox {
+                transform: rotateX(-15deg) scale(0.8); /* 进一步调整 */
+            }
+            
+            .spinBox {
+                width: 80px; /* 进一步缩小照片尺寸 */
+                height: 100px;
+            }
+            
+            /* 小屏幕层间距调整 */
+            #spinBox {
+                top: -30%;
+            }
+            
+            #spinBox3 {
+                top: 30%;
+            }
+            
+            /* 小屏幕照片反射效果调整 */
+            .spinBox img {
+                -webkit-box-reflect: below 3px linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.1));
+            }
+        }
+
+        /* 横屏优化 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .start-container {
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            
+            .photo-wall {
+                transform: scale(0.9);
+            }
+            
+            .controls {
+                bottom: 5px;
+                padding: 5px 10px;
             }
         }
     </style>
