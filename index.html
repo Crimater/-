@@ -27,37 +27,6 @@
             color: #fff;
         }
 
-        /* 加载界面 */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #111;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 1s ease;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #21D4FD;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        .loading-text {
-            font-size: 18px;
-            color: #fff;
-        }
-
         /* 开始按钮 */
         .start-container {
             position: absolute;
@@ -66,6 +35,7 @@
             transform: translate(-50%, -50%);
             z-index: 10;
             text-align: center;
+            animation: fadeIn 1.5s ease;
         }
 
         .title {
@@ -165,7 +135,7 @@
             display: flex;
             margin: auto;
             transform-style: preserve-3d;
-            transform: rotateX(-10deg); /* 调整角度使上层更突出 */
+            transform: rotateX(-10deg);
             width: 100%;
             height: 100%;
             justify-content: center;
@@ -180,26 +150,26 @@
             animation: spin 200s infinite linear;
         }
 
-        /* 以最上层为中心 - 关键修改 */
+        /* 以最上层为中心 */
         #spinBox {
             position: absolute;
-            top: 0; /* 第一层在中心 */
-            z-index: 3; /* 确保第一层在最前面 */
-            transform: scale(1.1); /* 上层稍微放大 */
+            top: 0;
+            z-index: 3;
+            transform: scale(1.1);
         }
 
         #spinBox2 {
             position: absolute;
-            top: 30%; /* 第二层在下方 */
+            top: 30%;
             z-index: 2;
-            transform: scale(0.9); /* 中层稍微缩小 */
+            transform: scale(0.9);
         }
 
         #spinBox3 {
             position: absolute;
-            top: 60%; /* 第三层在最下方 */
+            top: 60%;
             z-index: 1;
-            transform: scale(0.8); /* 下层进一步缩小 */
+            transform: scale(0.8);
         }
 
         .spinBox img {
@@ -235,6 +205,12 @@
             padding: 10px 20px;
             border-radius: 30px;
             backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .controls.show {
+            opacity: 1;
         }
 
         .control-btn {
@@ -267,7 +243,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -283,13 +259,19 @@
         }
 
         .modal-content {
-            max-width: 80%;
-            max-height: 80%;
+            max-width: 90%;
+            max-height: 90%;
             position: relative;
             background: #222;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
         }
 
         .modal-content img {
@@ -314,6 +296,12 @@
             cursor: pointer;
             font-size: 20px;
             z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 0, 0, 0.7);
+            transform: scale(1.1);
         }
 
         /* 动画 */
@@ -361,27 +349,27 @@
             
             /* 移动端照片墙优化 */
             #dragBox {
-                transform: rotateX(-5deg) scale(0.9); /* 调整角度和大小 */
+                transform: rotateX(-5deg) scale(0.9);
             }
             
             .spinBox {
-                width: 100px; /* 缩小照片尺寸 */
+                width: 100px;
                 height: 120px;
             }
             
             /* 移动端层间距调整 */
             #spinBox {
                 top: 0;
-                transform: scale(1.05); /* 移动端上层放大比例调整 */
+                transform: scale(1.05);
             }
             
             #spinBox2 {
-                top: 25%; /* 减小层间距 */
+                top: 25%;
                 transform: scale(0.85);
             }
             
             #spinBox3 {
-                top: 50%; /* 减小层间距 */
+                top: 50%;
                 transform: scale(0.75);
             }
             
@@ -416,11 +404,11 @@
             
             /* 小屏幕照片墙优化 */
             #dragBox {
-                transform: rotateX(-3deg) scale(0.8); /* 进一步调整 */
+                transform: rotateX(-3deg) scale(0.8);
             }
             
             .spinBox {
-                width: 80px; /* 进一步缩小照片尺寸 */
+                width: 80px;
                 height: 100px;
             }
             
@@ -473,12 +461,6 @@
     </style>
 </head>
 <body>
-    <!-- 加载界面 -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">加载中...</div>
-    </div>
-
     <!-- 开始界面 -->
     <div class="start-container" id="startContainer">
         <h1 class="title">我们的回忆</h1>
@@ -556,7 +538,6 @@
         ];
 
         // DOM元素
-        const loadingScreen = document.getElementById('loadingScreen');
         const startContainer = document.getElementById('startContainer');
         const startButton = document.getElementById('startButton');
         const photoWall = document.getElementById('photoWall');
@@ -579,18 +560,10 @@
         let isPlaying = true;
         let isMusicPlaying = false;
         let startX, startY, endX, endY, tX = 0, tY = 10, desX = 0, desY = 0;
+        let isInitialized = false;
 
         // 初始化函数
         function init() {
-            // 模拟加载过程
-            setTimeout(() => {
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                    startContainer.style.display = 'block';
-                }, 1000);
-            }, 1500);
-
             // 动态添加照片
             addPhotosToSpinBox(spinBox, photoData);
             addPhotosToSpinBox(spinBox2, [...photoData.slice(1), photoData[0]]);
@@ -598,6 +571,8 @@
 
             // 事件监听
             setupEventListeners();
+            
+            isInitialized = true;
         }
 
         // 添加照片到旋转盒子
@@ -607,6 +582,7 @@
                 img.src = photo.src;
                 img.alt = photo.title;
                 img.dataset.index = index;
+                img.title = "点击查看大图";
                 spinBox.appendChild(img);
             });
         }
@@ -648,10 +624,10 @@
             
             musicBtn.addEventListener('click', toggleMusic);
             
-            // 照片点击事件
+            // 照片点击事件 - 优化点击检测
             document.addEventListener('click', (e) => {
                 if (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('spinBox')) {
-                    openModal(e.target.src);
+                    openModal(e.target.src, e.target.alt);
                 }
             });
             
@@ -659,6 +635,13 @@
             modalClose.addEventListener('click', closeModal);
             imageModal.addEventListener('click', (e) => {
                 if (e.target === imageModal) {
+                    closeModal();
+                }
+            });
+            
+            // 键盘事件 - 按ESC关闭模态框
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
                     closeModal();
                 }
             });
@@ -674,13 +657,22 @@
         function startExperience() {
             startContainer.style.display = 'none';
             photoWall.style.display = 'block';
+            controls.classList.add('show');
+            
+            // 如果尚未初始化，则初始化照片墙
+            if (!isInitialized) {
+                init();
+            }
             
             // 播放音乐
+            backgroundMusic.volume = 0.5;
             backgroundMusic.play().then(() => {
                 isMusicPlaying = true;
                 musicBtn.innerHTML = '<i>♪</i>';
             }).catch(error => {
                 console.log('自动播放被阻止:', error);
+                // 显示提示，让用户手动播放
+                musicBtn.innerHTML = '<i>🔇</i>';
             });
             
             // 初始化照片位置
@@ -761,14 +753,17 @@
         }
 
         // 打开模态框
-        function openModal(imageSrc) {
+        function openModal(imageSrc, imageAlt) {
             modalImage.src = imageSrc;
+            modalImage.alt = imageAlt;
             imageModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
         }
 
         // 关闭模态框
         function closeModal() {
             imageModal.classList.remove('active');
+            document.body.style.overflow = ''; // 恢复背景滚动
         }
 
         // 设置拖拽事件
