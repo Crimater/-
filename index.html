@@ -165,7 +165,7 @@
             display: flex;
             margin: auto;
             transform-style: preserve-3d;
-            transform: rotateX(-30deg);
+            transform: rotateX(-10deg); /* 调整角度使上层更突出 */
             width: 100%;
             height: 100%;
             justify-content: center;
@@ -180,21 +180,26 @@
             animation: spin 200s infinite linear;
         }
 
-        /* 以第二层为中心 - 关键修改 */
+        /* 以最上层为中心 - 关键修改 */
         #spinBox {
             position: absolute;
-            top: -40%; /* 第一层在上方 */
+            top: 0; /* 第一层在中心 */
+            z-index: 3; /* 确保第一层在最前面 */
+            transform: scale(1.1); /* 上层稍微放大 */
         }
 
         #spinBox2 {
             position: absolute;
-            top: 0; /* 第二层在中心 */
-            z-index: 2; /* 确保第二层在最前面 */
+            top: 30%; /* 第二层在下方 */
+            z-index: 2;
+            transform: scale(0.9); /* 中层稍微缩小 */
         }
 
         #spinBox3 {
             position: absolute;
-            top: 40%; /* 第三层在下方 */
+            top: 60%; /* 第三层在最下方 */
+            z-index: 1;
+            transform: scale(0.8); /* 下层进一步缩小 */
         }
 
         .spinBox img {
@@ -356,7 +361,7 @@
             
             /* 移动端照片墙优化 */
             #dragBox {
-                transform: rotateX(-20deg) scale(0.9); /* 调整角度和大小 */
+                transform: rotateX(-5deg) scale(0.9); /* 调整角度和大小 */
             }
             
             .spinBox {
@@ -366,11 +371,18 @@
             
             /* 移动端层间距调整 */
             #spinBox {
-                top: -35%; /* 减小层间距 */
+                top: 0;
+                transform: scale(1.05); /* 移动端上层放大比例调整 */
+            }
+            
+            #spinBox2 {
+                top: 25%; /* 减小层间距 */
+                transform: scale(0.85);
             }
             
             #spinBox3 {
-                top: 35%; /* 减小层间距 */
+                top: 50%; /* 减小层间距 */
+                transform: scale(0.75);
             }
             
             /* 移动端照片反射效果调整 */
@@ -404,7 +416,7 @@
             
             /* 小屏幕照片墙优化 */
             #dragBox {
-                transform: rotateX(-15deg) scale(0.8); /* 进一步调整 */
+                transform: rotateX(-3deg) scale(0.8); /* 进一步调整 */
             }
             
             .spinBox {
@@ -414,11 +426,18 @@
             
             /* 小屏幕层间距调整 */
             #spinBox {
-                top: -30%;
+                top: 0;
+                transform: scale(1);
+            }
+            
+            #spinBox2 {
+                top: 20%;
+                transform: scale(0.8);
             }
             
             #spinBox3 {
-                top: 30%;
+                top: 40%;
+                transform: scale(0.7);
             }
             
             /* 小屏幕照片反射效果调整 */
@@ -440,6 +459,15 @@
             .controls {
                 bottom: 5px;
                 padding: 5px 10px;
+            }
+            
+            /* 横屏时调整层间距 */
+            #spinBox2 {
+                top: 20%;
+            }
+            
+            #spinBox3 {
+                top: 40%;
             }
         }
     </style>
