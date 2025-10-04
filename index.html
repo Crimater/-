@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D照片表白墙</title>
+    <title>我们的回忆 - 心形照片墙</title>
     <style>
         * {
             margin: 0;
@@ -41,7 +41,7 @@
         .title {
             font-size: 2.5rem;
             margin-bottom: 30px;
-            background: linear-gradient(45deg, #21D4FD, #B721FF);
+            background: linear-gradient(45deg, #ff6b9d, #ff3366);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -79,11 +79,11 @@
             padding: 8px;
             border-radius: 28px;
             background: conic-gradient(from var(--d, 0deg),
-                    #21D4FD,
+                    #ff6b9d,
                     #0000 30deg 120deg,
-                    #B721FF 150deg 180deg,
+                    #ff3366 150deg 180deg,
                     #0000 210deg 300deg,
-                    #21D4FD 330deg);
+                    #ff6b9d 330deg);
             -webkit-mask:
                 linear-gradient(#000 0 0) content-box,
                 linear-gradient(#000 0 0);
@@ -96,8 +96,8 @@
             position: absolute;
             inset: -100px;
             background:
-                radial-gradient(80px at left 150px top 120px, #21D4FD 98%, #0000),
-                radial-gradient(80px at right 150px bottom 120px, #B721FF 98%, #0000);
+                radial-gradient(80px at left 150px top 120px, #ff6b9d 98%, #0000),
+                radial-gradient(80px at right 150px bottom 120px, #ff3366 98%, #0000);
             filter: blur(60px);
             opacity: 0.5;
         }
@@ -108,7 +108,7 @@
         }
 
         .click_me:hover {
-            box-shadow: 0 0 20px rgba(33, 212, 253, 0.5);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
             transform: scale(1.05);
         }
 
@@ -122,74 +122,40 @@
             transition: 0.5s, 60s linear --d;
         }
 
-        /* 照片墙容器 */
-        .photo-wall {
+        /* 心形照片墙容器 */
+        .heart-wall {
             position: relative;
             width: 100%;
             height: 100%;
             display: none;
         }
 
-        #dragBox {
+        #heartContainer {
             position: relative;
-            display: flex;
+            width: 600px;
+            height: 600px;
             margin: auto;
             transform-style: preserve-3d;
-            transform: rotateX(-10deg);
-            width: 100%;
-            height: 100%;
-            justify-content: center;
-            align-items: center;
+            transition: transform 0.5s ease;
         }
 
-        .spinBox {
-            position: relative;
+        .heart-photo {
+            position: absolute;
             width: 120px;
             height: 140px;
-            transform-style: preserve-3d;
-            animation: spin 200s infinite linear;
-        }
-
-        /* 以最上层为中心 */
-        #spinBox {
-            position: absolute;
-            top: 0;
-            z-index: 3;
-            transform: scale(1.1);
-        }
-
-        #spinBox2 {
-            position: absolute;
-            top: 30%;
-            z-index: 2;
-            transform: scale(0.9);
-        }
-
-        #spinBox3 {
-            position: absolute;
-            top: 60%;
-            z-index: 1;
-            transform: scale(0.8);
-        }
-
-        .spinBox img {
-            transform-style: preserve-3d;
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
             object-fit: cover;
             border-radius: 8px;
             box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
             transition: all 0.3s ease;
             cursor: pointer;
-            -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.3));
+            transform-origin: center;
+            transform-style: preserve-3d;
         }
 
-        .spinBox img:hover {
+        .heart-photo:hover {
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-            transform: scale(1.05);
+            transform: scale(1.1) translateZ(20px);
+            z-index: 10;
         }
 
         /* 控制面板 */
@@ -305,15 +271,6 @@
         }
 
         /* 动画 */
-        @keyframes spin {
-            from {
-                transform: rotateY(0deg);
-            }
-            to {
-                transform: rotateY(360deg);
-            }
-        }
-
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -322,6 +279,15 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotateY(0);
+            }
+            50% {
+                transform: translateY(-10px) rotateY(5deg);
             }
         }
 
@@ -347,35 +313,15 @@
                 height: 35px;
             }
             
-            /* 移动端照片墙优化 */
-            #dragBox {
-                transform: rotateX(-5deg) scale(0.9);
+            /* 移动端心形照片墙优化 */
+            #heartContainer {
+                width: 400px;
+                height: 400px;
             }
             
-            .spinBox {
-                width: 100px;
-                height: 120px;
-            }
-            
-            /* 移动端层间距调整 */
-            #spinBox {
-                top: 0;
-                transform: scale(1.05);
-            }
-            
-            #spinBox2 {
-                top: 25%;
-                transform: scale(0.85);
-            }
-            
-            #spinBox3 {
-                top: 50%;
-                transform: scale(0.75);
-            }
-            
-            /* 移动端照片反射效果调整 */
-            .spinBox img {
-                -webkit-box-reflect: below 5px linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.2));
+            .heart-photo {
+                width: 80px;
+                height: 100px;
             }
         }
 
@@ -402,35 +348,15 @@
                 height: 30px;
             }
             
-            /* 小屏幕照片墙优化 */
-            #dragBox {
-                transform: rotateX(-3deg) scale(0.8);
+            /* 小屏幕心形照片墙优化 */
+            #heartContainer {
+                width: 300px;
+                height: 300px;
             }
             
-            .spinBox {
-                width: 80px;
-                height: 100px;
-            }
-            
-            /* 小屏幕层间距调整 */
-            #spinBox {
-                top: 0;
-                transform: scale(1);
-            }
-            
-            #spinBox2 {
-                top: 20%;
-                transform: scale(0.8);
-            }
-            
-            #spinBox3 {
-                top: 40%;
-                transform: scale(0.7);
-            }
-            
-            /* 小屏幕照片反射效果调整 */
-            .spinBox img {
-                -webkit-box-reflect: below 3px linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.1));
+            .heart-photo {
+                width: 60px;
+                height: 80px;
             }
         }
 
@@ -440,7 +366,7 @@
                 transform: translate(-50%, -50%) scale(0.8);
             }
             
-            .photo-wall {
+            .heart-wall {
                 transform: scale(0.9);
             }
             
@@ -449,13 +375,9 @@
                 padding: 5px 10px;
             }
             
-            /* 横屏时调整层间距 */
-            #spinBox2 {
-                top: 20%;
-            }
-            
-            #spinBox3 {
-                top: 40%;
+            #heartContainer {
+                width: 350px;
+                height: 350px;
             }
         }
     </style>
@@ -467,18 +389,10 @@
         <button class="click_me" id="startButton">开启回忆之旅</button>
     </div>
 
-    <!-- 照片墙 -->
-    <div class="photo-wall" id="photoWall">
-        <div id="dragBox">
-            <div class="spinBox" id="spinBox">
-                <!-- 照片将通过JavaScript动态添加 -->
-            </div>
-            <div class="spinBox" id="spinBox2">
-                <!-- 照片将通过JavaScript动态添加 -->
-            </div>
-            <div class="spinBox" id="spinBox3">
-                <!-- 照片将通过JavaScript动态添加 -->
-            </div>
+    <!-- 心形照片墙 -->
+    <div class="heart-wall" id="heartWall">
+        <div id="heartContainer">
+            <!-- 照片将通过JavaScript动态添加 -->
         </div>
     </div>
 
@@ -490,7 +404,7 @@
         <button class="control-btn" id="zoomOutBtn" title="缩小">
             <i>-</i>
         </button>
-        <button class="control-btn" id="playPauseBtn" title="暂停/播放旋转">
+        <button class="control-btn" id="playPauseBtn" title="暂停/播放浮动">
             <i>❚❚</i>
         </button>
         <button class="control-btn" id="musicBtn" title="音乐开关">
@@ -540,11 +454,8 @@
         // DOM元素
         const startContainer = document.getElementById('startContainer');
         const startButton = document.getElementById('startButton');
-        const photoWall = document.getElementById('photoWall');
-        const dragBox = document.getElementById('dragBox');
-        const spinBox = document.getElementById('spinBox');
-        const spinBox2 = document.getElementById('spinBox2');
-        const spinBox3 = document.getElementById('spinBox3');
+        const heartWall = document.getElementById('heartWall');
+        const heartContainer = document.getElementById('heartContainer');
         const controls = document.getElementById('controls');
         const zoomInBtn = document.getElementById('zoomInBtn');
         const zoomOutBtn = document.getElementById('zoomOutBtn');
@@ -556,52 +467,69 @@
         const modalClose = document.getElementById('modalClose');
 
         // 全局变量
-        let radius = 560;
+        let heartSize = 600;
         let isPlaying = true;
         let isMusicPlaying = false;
-        let startX, startY, endX, endY, tX = 0, tY = 10, desX = 0, desY = 0;
         let isInitialized = false;
+        let startX, startY, endX, endY, tX = 0, tY = 0, desX = 0, desY = 0;
+        let isDragging = false;
 
         // 初始化函数
         function init() {
-            // 动态添加照片
-            addPhotosToSpinBox(spinBox, photoData);
-            addPhotosToSpinBox(spinBox2, [...photoData.slice(1), photoData[0]]);
-            addPhotosToSpinBox(spinBox3, [...photoData.slice(2), ...photoData.slice(0, 2)]);
-
+            // 动态添加照片到心形布局
+            createHeartLayout();
+            
             // 事件监听
             setupEventListeners();
             
             isInitialized = true;
         }
 
-        // 添加照片到旋转盒子
-        function addPhotosToSpinBox(spinBox, photos) {
-            photos.forEach((photo, index) => {
-                const img = document.createElement('img');
-                img.src = photo.src;
-                img.alt = photo.title;
-                img.dataset.index = index;
-                img.title = "点击查看大图";
-                spinBox.appendChild(img);
-            });
-        }
-
-        // 设置照片位置
-        function setPhotoPositions(delayTime) {
-            const spinBoxes = [spinBox, spinBox2, spinBox3];
+        // 创建心形布局
+        function createHeartLayout() {
+            const numPhotos = photoData.length;
+            const centerX = heartSize / 2;
+            const centerY = heartSize / 2;
+            const heartRadius = heartSize * 0.4;
             
-            spinBoxes.forEach(box => {
-                const photos = box.getElementsByTagName('img');
-                const len = photos.length;
+            // 清空容器
+            heartContainer.innerHTML = '';
+            
+            // 为每张照片计算心形坐标
+            for (let i = 0; i < numPhotos; i++) {
+                const angle = (i / numPhotos) * 2 * Math.PI;
                 
-                for (let i = 0; i < len; i++) {
-                    const photo = photos[i];
-                    photo.style.transform = `rotateY(${i * (360 / len)}deg) translateZ(${radius}px)`;
-                    photo.style.transition = 'transform 1s';
-                    photo.style.transitionDelay = delayTime || `${(len - i) / 4}s`;
-                }
-            });
+                // 心形曲线参数方程
+                const t = angle;
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+                
+                // 缩放和平移坐标
+                const scaledX = centerX + x * heartRadius / 16;
+                const scaledY = centerY - y * heartRadius / 16;
+                
+                // 创建照片元素
+                const img = document.createElement('img');
+                img.src = photoData[i].src;
+                img.alt = photoData[i].title;
+                img.className = 'heart-photo';
+                img.dataset.index = i;
+                img.title = "点击查看大图";
+                
+                // 设置位置和旋转
+                img.style.left = `${scaledX - 60}px`;
+                img.style.top = `${scaledY - 70}px`;
+                
+                // 计算朝向中心的旋转角度
+                const angleToCenter = Math.atan2(centerY - scaledY, centerX - scaledX) * 180 / Math.PI;
+                img.style.transform = `rotate(${angleToCenter}deg)`;
+                
+                // 添加浮动动画
+                img.style.animation = `float ${3 + i % 3}s ease-in-out infinite`;
+                img.style.animationDelay = `${i * 0.1}s`;
+                
+                heartContainer.appendChild(img);
+            }
         }
 
         // 设置事件监听器
@@ -611,22 +539,26 @@
             
             // 控制按钮事件
             zoomInBtn.addEventListener('click', () => {
-                radius += 50;
-                setPhotoPositions(0);
+                heartSize = Math.min(800, heartSize + 50);
+                heartContainer.style.width = `${heartSize}px`;
+                heartContainer.style.height = `${heartSize}px`;
+                createHeartLayout();
             });
             
             zoomOutBtn.addEventListener('click', () => {
-                radius = Math.max(300, radius - 50);
-                setPhotoPositions(0);
+                heartSize = Math.max(300, heartSize - 50);
+                heartContainer.style.width = `${heartSize}px`;
+                heartContainer.style.height = `${heartSize}px`;
+                createHeartLayout();
             });
             
-            playPauseBtn.addEventListener('click', toggleRotation);
+            playPauseBtn.addEventListener('click', toggleAnimation);
             
             musicBtn.addEventListener('click', toggleMusic);
             
-            // 照片点击事件 - 优化点击检测
-            document.addEventListener('click', (e) => {
-                if (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('spinBox')) {
+            // 照片点击事件
+            heartContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('heart-photo')) {
                     openModal(e.target.src, e.target.alt);
                 }
             });
@@ -646,7 +578,7 @@
                 }
             });
             
-            // 鼠标/触摸事件
+            // 拖拽事件
             setupDragEvents();
             
             // 鼠标滚轮事件
@@ -656,7 +588,7 @@
         // 开始体验
         function startExperience() {
             startContainer.style.display = 'none';
-            photoWall.style.display = 'block';
+            heartWall.style.display = 'block';
             controls.classList.add('show');
             
             // 如果尚未初始化，则初始化照片墙
@@ -674,11 +606,6 @@
                 // 显示提示，让用户手动播放
                 musicBtn.innerHTML = '<i>🔇</i>';
             });
-            
-            // 初始化照片位置
-            setTimeout(() => {
-                setPhotoPositions();
-            }, 500);
             
             // 添加点击特效
             addClickEffect();
@@ -728,13 +655,17 @@
             }(window, document);
         }
 
-        // 切换旋转状态
-        function toggleRotation() {
+        // 切换动画状态
+        function toggleAnimation() {
             isPlaying = !isPlaying;
-            const spinBoxes = [spinBox, spinBox2, spinBox3];
+            const photos = document.querySelectorAll('.heart-photo');
             
-            spinBoxes.forEach(box => {
-                box.style.animationPlayState = isPlaying ? 'running' : 'paused';
+            photos.forEach(photo => {
+                if (isPlaying) {
+                    photo.style.animationPlayState = 'running';
+                } else {
+                    photo.style.animationPlayState = 'paused';
+                }
             });
             
             playPauseBtn.innerHTML = isPlaying ? '<i>❚❚</i>' : '<i>▶</i>';
@@ -768,11 +699,9 @@
 
         // 设置拖拽事件
         function setupDragEvents() {
-            let isDragging = false;
-            
             document.addEventListener('pointerdown', (e) => {
                 isDragging = true;
-                clearInterval(dragBox.timer);
+                clearInterval(heartContainer.timer);
                 startX = e.clientX;
                 startY = e.clientY;
                 
@@ -783,7 +712,7 @@
             function handlePointerMove(e) {
                 if (!isDragging) return;
                 
-                toggleRotation();
+                toggleAnimation();
                 
                 endX = e.clientX;
                 endY = e.clientY;
@@ -794,10 +723,11 @@
                 tX += desX * 0.1;
                 tY += desY * 0.1;
                 
-                // 限制Y轴旋转角度
-                tY = Math.max(0, Math.min(50, tY));
+                // 限制旋转角度
+                tX = tX % 360;
+                tY = Math.max(-30, Math.min(30, tY));
                 
-                changeRotate(dragBox);
+                heartContainer.style.transform = `rotateX(${-tY}deg) rotateY(${tX}deg)`;
                 
                 startX = endX;
                 startY = endY;
@@ -807,17 +737,17 @@
                 isDragging = false;
                 
                 // 惯性效果
-                dragBox.timer = setInterval(() => {
+                heartContainer.timer = setInterval(() => {
                     desX *= 0.95;
                     desY *= 0.95;
                     tX += desX * 0.1;
                     tY += desY * 0.1;
                     
-                    changeRotate(dragBox);
+                    heartContainer.style.transform = `rotateX(${-tY}deg) rotateY(${tX}deg)`;
                     
                     if (Math.abs(desX) < 0.5 && Math.abs(desY) < 0.5) {
-                        clearInterval(dragBox.timer);
-                        toggleRotation();
+                        clearInterval(heartContainer.timer);
+                        toggleAnimation();
                     }
                 }, 16);
                 
@@ -830,13 +760,10 @@
         function handleWheel(e) {
             e.preventDefault();
             const delta = e.deltaY > 0 ? -20 : 20;
-            radius = Math.max(300, Math.min(800, radius + delta));
-            setPhotoPositions(0);
-        }
-
-        // 改变旋转角度
-        function changeRotate(obj) {
-            obj.style.transform = `rotateX(${-tY}deg) rotateY(${tX}deg)`;
+            heartSize = Math.max(300, Math.min(800, heartSize + delta));
+            heartContainer.style.width = `${heartSize}px`;
+            heartContainer.style.height = `${heartSize}px`;
+            createHeartLayout();
         }
 
         // 初始化应用
