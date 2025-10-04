@@ -1,75 +1,49 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我们的回忆 - 心形照片墙</title>
+    <title>3d照片表白墙</title>
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        html, body {
+        html,
+        body {
             height: 100%;
             touch-action: none;
-            font-family: 'Arial', sans-serif;
         }
 
+        /* perspective指定了观察者与 Z=9 平面的距离，使具有三维位置变换的元素产生透视效果。 */
         body {
             overflow: hidden;
             display: flex;
-            justify-content: center;
-            align-items: center;
             perspective: 1000px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
-        }
-
-        /* 开始按钮 */
-        .start-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-            text-align: center;
-            animation: fadeIn 1.5s ease;
-        }
-
-        .title {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            background: linear-gradient(45deg, #ff6b9d, #ff3366);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .click_me {
-            width: 200px;
-            height: 200px;
-            font-size: 24px;
-            color: #fff;
-            background: none;
-            border: none;
-            border-radius: 20px;
-            position: relative;
-            z-index: 0;
-            transition: all 0.3s;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            background: #111;
         }
 
         @property --d {
             syntax: '<angle>';
             inherits: true;
             initial-value: 0deg;
+        }
+
+        .click_me {
+            width: 200px;
+            aspect-ratio: 1;
+            font-size: 30px;
+            color: #fff;
+            background: none;
+            border: none;
+            border-radius: 20px;
+            position: relative;
+            z-index: 0;
+            transition: .3s;
+            cursor: pointer;
         }
 
         .click_me:before {
@@ -79,16 +53,16 @@
             padding: 8px;
             border-radius: 28px;
             background: conic-gradient(from var(--d, 0deg),
-                    #ff6b9d,
+                    #21D4FD,
                     #0000 30deg 120deg,
-                    #ff3366 150deg 180deg,
+                    #B721FF 150deg 180deg,
                     #0000 210deg 300deg,
-                    #ff6b9d 330deg);
+                    #21D4FD 330deg);
             -webkit-mask:
                 linear-gradient(#000 0 0) content-box,
                 linear-gradient(#000 0 0);
             -webkit-mask-composite: xor;
-            mask-composite: intersect;
+            mask-composite: intersect
         }
 
         .click_me:after {
@@ -96,586 +70,246 @@
             position: absolute;
             inset: -100px;
             background:
-                radial-gradient(80px at left 150px top 120px, #ff6b9d 98%, #0000),
-                radial-gradient(80px at right 150px bottom 120px, #ff3366 98%, #0000);
+                radial-gradient(80px at left 150px top 120px, #21D4FD 98%, #0000),
+                radial-gradient(80px at right 150px bottom 120px, #B721FF 98%, #0000);
             filter: blur(60px);
-            opacity: 0.5;
+            opacity: .5;
         }
 
         .click_me:before,
         .click_me:after {
-            transition: 0.5s, 99999s 99999s transform, 99999s 99999s --d;
+            transition: .5s, 99999s 99999s transform, 99999s 99999s --d;
         }
 
         .click_me:hover {
-            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
-            transform: scale(1.05);
+            box-shadow: 0 0 0 1px #666;
         }
+
 
         .click_me:hover:after {
             transform: rotate(3600deg);
-            transition: 0.5s, 60s linear transform;
+            transition: .5s, 60s linear transform;
         }
 
         .click_me:hover:before {
             --d: 3600deg;
-            transition: 0.5s, 60s linear --d;
+            transition: .5s, 60s linear --d;
         }
 
-        /* 心形照片墙容器 */
-        .heart-wall {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: none;
-            justify-content: center;
-            align-items: center;
+        .click_me:hover:before {
+            background-color: #222;
         }
 
-        #heartContainer {
-            position: relative;
-            width: 600px;
-            height: 600px;
-            transform-style: preserve-3d;
-            transition: transform 0.5s ease;
-        }
-
-        .heart-photo {
+        .click_me_shell {
+            margin: 0;
+            /* min-height: 100vh; */
+            display: grid;
+            place-content: center;
+            grid-auto-flow: column;
+            background-color: #1b1b1c;
             position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #dragBox,
+        .spinBox {
+            position: relative;
+            display: flex;
+            margin: auto;
+            transform-style: preserve-3d;
+            transform: rotateX(-10deg);
+        }
+
+        #dragBox {
+            transform: rotateX(-30deg)
+        }
+
+        .spinBox {
             width: 120px;
             height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            transform-origin: center;
+            animation: spin 200s infinite linear;
+        }
+
+        #spinBox2 {
+            position: absolute;
+            top: 120%;
+        }
+
+        #spinBox3 {
+            position: absolute;
+            top: -120%;
+        }
+
+        #dragBox img {
             transform-style: preserve-3d;
-        }
-
-        .heart-photo:hover {
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-            transform: scale(1.1) translateZ(20px);
-            z-index: 10;
-        }
-
-        /* 控制面板 */
-        .controls {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .controls.show {
-            opacity: 1;
-        }
-
-        .control-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
-        }
-
-        .control-btn i {
-            font-size: 18px;
-        }
-
-        /* 照片详情模态框 */
-        .modal {
-            position: fixed;
-            top: 0;
+            position: absolute;
             left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
+            box-shadow: 0 0 8px #fff;
+            /*倒影 */
+            -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, #0005);
         }
 
-        .modal.active {
-            opacity: 1;
-            visibility: visible;
+        #dragBox img:hover {
+            box-shadow: 0 0 15px #fff;
         }
 
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            position: relative;
-            background: #222;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
-        }
-
-        .modal.active .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-content img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 20px;
-            z-index: 10;
-            transition: all 0.3s;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 0, 0, 0.7);
-            transform: scale(1.1);
-        }
-
-        /* 动画 */
-        @keyframes fadeIn {
+        /*自动旋转 */
+        @keyframes spin {
             from {
-                opacity: 0;
-                transform: translateY(20px);
+                transform: rotateY(0deg);
             }
+
             to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotateY(0);
-            }
-            50% {
-                transform: translateY(-10px) rotateY(5deg);
-            }
-        }
-
-        /* 响应式设计 - 移动端优化 */
-        @media (max-width: 768px) {
-            .title {
-                font-size: 1.8rem;
-            }
-            
-            .click_me {
-                width: 150px;
-                height: 150px;
-                font-size: 18px;
-            }
-            
-            .controls {
-                bottom: 10px;
-                padding: 8px 15px;
-            }
-            
-            .control-btn {
-                width: 35px;
-                height: 35px;
-            }
-            
-            /* 移动端心形照片墙优化 */
-            #heartContainer {
-                width: 400px;
-                height: 400px;
-                margin: 0 auto;
-            }
-            
-            .heart-photo {
-                width: 80px;
-                height: 100px;
-            }
-            
-            /* 确保心形在移动端居中 */
-            .heart-wall {
-                padding: 20px;
-                overflow: hidden;
-            }
-        }
-
-        /* 小屏幕手机优化 */
-        @media (max-width: 480px) {
-            .title {
-                font-size: 1.5rem;
-            }
-            
-            .click_me {
-                width: 120px;
-                height: 120px;
-                font-size: 16px;
-            }
-            
-            .controls {
-                bottom: 5px;
-                padding: 6px 12px;
-                gap: 10px;
-            }
-            
-            .control-btn {
-                width: 30px;
-                height: 30px;
-            }
-            
-            /* 小屏幕心形照片墙优化 */
-            #heartContainer {
-                width: 320px;
-                height: 320px;
-                margin: 0 auto;
-            }
-            
-            .heart-photo {
-                width: 60px;
-                height: 80px;
-            }
-            
-            /* 确保心形在小屏幕上居中 */
-            .heart-wall {
-                padding: 15px;
-                overflow: hidden;
-            }
-        }
-
-        /* 超小屏幕手机优化 */
-        @media (max-width: 360px) {
-            #heartContainer {
-                width: 280px;
-                height: 280px;
-            }
-            
-            .heart-photo {
-                width: 50px;
-                height: 65px;
-            }
-        }
-
-        /* 横屏优化 */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .start-container {
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-            
-            .heart-wall {
-                transform: scale(0.9);
-            }
-            
-            .controls {
-                bottom: 5px;
-                padding: 5px 10px;
-            }
-            
-            #heartContainer {
-                width: 350px;
-                height: 350px;
+                transform: rotateY(360deg);
             }
         }
     </style>
 </head>
+
 <body>
-    <!-- 开始界面 -->
-    <div class="start-container" id="startContainer">
-        <h1 class="title">我们的回忆</h1>
-        <button class="click_me" id="startButton">开启回忆之旅</button>
+    <div class="click_me_shell" id="click_me_shell">
+        <audio loop src="img/落在生命里的光-尹昔眠.m4a" id="audio" autoplay preload="auto"></audio>
+        <button class="click_me">Click Me</button>
     </div>
-
-    <!-- 心形照片墙 -->
-    <div class="heart-wall" id="heartWall">
-        <div id="heartContainer">
-            <!-- 照片将通过JavaScript动态添加 -->
+    <div id="dragBox">
+        <div class="spinBox" id="spinBox">
+            <img src="img/1.webp">
+            <img src="img/2.webp">
+            <img src="img/3.webp">
+            <img src="img/4.webp">
+            <img src="img/6.webp">
+            <img src="img/7.webp">
+            <img src="img/8.webp">
+            <img src="img/1.webp">
+            <img src="img/2.webp">
+            <img src="img/3.webp">
+            <img src="img/4.webp">
+            <img src="img/6.webp">
+            <img src="img/7.webp">
+            <img src="img/8.webp">
+            <img src="img/1.webp">
+            <img src="img/2.webp">
+            <img src="img/3.webp">
+            <img src="img/4.webp">
+            <img src="img/6.webp">
+            <img src="img/7.webp">
+            <img src="img/8.webp">
+        </div>
+        <div class="spinBox" id="spinBox2">
+            <img src="img/2.webp">
+            <img src="img/3.webp">
+            <img src="img/4.webp">
+            <img src="img/6.webp">
+            <img src="img/7.webp">
+            <img src="img/8.webp">
+            <img src="img/1.webp">
+            <img src="img/2.webp">
+            <img src="img/3.webp">
+            <img src="img/4.webp">
+            <img src="img/6.webp">
+            <img src="img/7.webp">
+            <img src="img/8.webp">
+            <img src="img/1.webp">
+            <img src="img/2.webp">
+            <img src="img/3.webp">
+            <img src="img/4.webp">
+            <img src="img/6.webp">
+            <img src="img/7.webp">
+            <img src="img/8.webp">
+            <img src="img/1.webp">
+        </div>
+        <div class="spinBox" id="spinBox3">
+            <img src="img/3.webp">
+            <img src="img/4.webp">
+            <img src="img/6.webp">
+            <img src="img/7.webp">
+            <img src="img/8.webp">
+            <img src="img/1.webp">
+            <img src="img/2.webp">
+            <img src="img/3.webp">
+            <img src="img/4.webp">
+            <img src="img/6.webp">
+            <img src="img/7.webp">
+            <img src="img/8.webp">
+            <img src="img/1.webp">
+            <img src="img/2.webp">
+            <img src="img/3.webp">
+            <img src="img/4.webp">
+            <img src="img/6.webp">
+            <img src="img/7.webp">
+            <img src="img/8.webp">
+            <img src="img/1.webp">
+            <img src="img/2.webp">
         </div>
     </div>
-
-    <!-- 控制面板 -->
-    <div class="controls" id="controls">
-        <button class="control-btn" id="zoomInBtn" title="放大">
-            <i>+</i>
-        </button>
-        <button class="control-btn" id="zoomOutBtn" title="缩小">
-            <i>-</i>
-        </button>
-        <button class="control-btn" id="playPauseBtn" title="暂停/播放浮动">
-            <i>❚❚</i>
-        </button>
-        <button class="control-btn" id="musicBtn" title="音乐开关">
-            <i>♪</i>
-        </button>
-    </div>
-
-    <!-- 照片详情模态框 -->
-    <div class="modal" id="imageModal">
-        <div class="modal-content">
-            <button class="modal-close" id="modalClose">&times;</button>
-            <img id="modalImage" src="" alt="照片详情">
-        </div>
-    </div>
-
-    <!-- 音频 -->
-    <audio loop id="backgroundMusic" preload="auto">
-        <source src="img/落在生命里的光-尹昔眠.m4a" type="audio/mp4">
-        您的浏览器不支持音频元素。
-    </audio>
-
     <script>
-        // 照片数据
-        const photoData = [
-            { src: 'img/1.webp', title: '美好瞬间1' },
-            { src: 'img/2.webp', title: '美好瞬间2' },
-            { src: 'img/3.webp', title: '美好瞬间3' },
-            { src: 'img/4.webp', title: '美好瞬间4' },
-            { src: 'img/5.webp', title: '美好瞬间5' },
-            { src: 'img/6.webp', title: '美好瞬间6' },
-            { src: 'img/7.webp', title: '美好瞬间7' },
-            { src: 'img/8.webp', title: '美好瞬间8' },
-            { src: 'img/9.webp', title: '美好瞬间9' },
-            { src: 'img/10.webp', title: '美好瞬间10' },
-            { src: 'img/11.webp', title: '美好瞬间11' },
-            { src: 'img/12.webp', title: '美好瞬间12' },
-            { src: 'img/13.webp', title: '美好瞬间13' },
-            { src: 'img/14.webp', title: '美好瞬间14' },
-            { src: 'img/15.webp', title: '美好瞬间15' },
-            { src: 'img/16.webp', title: '美好瞬间16' },
-            { src: 'img/17.webp', title: '美好瞬间17' },
-            { src: 'img/18.webp', title: '美好瞬间18' },
-            { src: 'img/19.webp', title: '美好瞬间19' },
-            { src: 'img/20.webp', title: '美好瞬间20' }
-        ];
+        let radius = 560;
+        //相册展开大小
+        let outDom = document.getElementById("dragBox");
+        outDom.style.display = 'none';
 
-        // DOM元素
-        const startContainer = document.getElementById('startContainer');
-        const startButton = document.getElementById('startButton');
-        const heartWall = document.getElementById('heartWall');
-        const heartContainer = document.getElementById('heartContainer');
-        const controls = document.getElementById('controls');
-        const zoomInBtn = document.getElementById('zoomInBtn');
-        const zoomOutBtn = document.getElementById('zoomOutBtn');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const musicBtn = document.getElementById('musicBtn');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        const imageModal = document.getElementById('imageModal');
-        const modalImage = document.getElementById('modalImage');
-        const modalClose = document.getElementById('modalClose');
+        let spinDom = document.getElementById("spinBox");
+        let spinDom2 = document.getElementById("spinBox2");
+        let spinDom3 = document.getElementById("spinBox3");
 
-        // 全局变量
-        let heartSize = 600;
-        let isPlaying = true;
-        let isMusicPlaying = false;
-        let isInitialized = false;
-        let startX, startY, endX, endY, tX = 0, tY = 0, desX = 0, desY = 0;
-        let isDragging = false;
+        let aImg = spinDom.getElementsByTagName('img');
+        let aImg2 = spinDom2.getElementsByTagName('img');
+        let aImg3 = spinDom3.getElementsByTagName('img');
 
-        // 初始化函数
-        function init() {
-            // 动态添加照片到心形布局
-            createHeartLayout();
-            
-            // 事件监听
-            setupEventListeners();
-            
-            isInitialized = true;
+        let aEle = [...aImg];
+        let aEle2 = [...aImg2];
+        let aEle3 = [...aImg3];
+
+        function setStyle(delayTime, dom, i, len) {
+            //给元素加动画 展开
+            dom.style.transform = "rotateY(" + (i * (360 / len)) + "deg) translateZ(" + radius + "px)";
+            dom.style.transition = "transform 1s";
+            dom.style.transitionDelay = delayTime || (len - i) / 4 + "s";
         }
 
-        // 创建心形布局
-        function createHeartLayout() {
-            const numPhotos = photoData.length;
-            const centerX = heartSize / 2;
-            const centerY = heartSize / 2;
-            const heartRadius = heartSize * 0.4;
-            
-            // 清空容器
-            heartContainer.innerHTML = '';
-            
-            // 为每张照片计算心形坐标
-            for (let i = 0; i < numPhotos; i++) {
-                const angle = (i / numPhotos) * 2 * Math.PI;
-                
-                // 心形曲线参数方程
-                const t = angle;
-                const x = 16 * Math.pow(Math.sin(t), 3);
-                const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
-                
-                // 缩放和平移坐标
-                const scaledX = centerX + x * heartRadius / 16;
-                const scaledY = centerY - y * heartRadius / 16;
-                
-                // 创建照片元素
-                const img = document.createElement('img');
-                img.src = photoData[i].src;
-                img.alt = photoData[i].title;
-                img.className = 'heart-photo';
-                img.dataset.index = i;
-                img.title = "点击查看大图";
-                
-                // 设置位置和旋转
-                img.style.left = `${scaledX - 60}px`;
-                img.style.top = `${scaledY - 70}px`;
-                
-                // 计算朝向中心的旋转角度
-                const angleToCenter = Math.atan2(centerY - scaledY, centerX - scaledX) * 180 / Math.PI;
-                img.style.transform = `rotate(${angleToCenter}deg)`;
-                
-                // 添加浮动动画
-                img.style.animation = `float ${3 + i % 3}s ease-in-out infinite`;
-                img.style.animationDelay = `${i * 0.1}s`;
-                
-                heartContainer.appendChild(img);
+        function init(delayTime) {
+            for (let i = 0; i < aEle.length; i++) {
+                setStyle(delayTime, aEle[i], i, aEle.length)
+            }
+            for (let i = 0; i < aEle2.length; i++) {
+                setStyle(delayTime, aEle2[i], i, aEle2.length)
+            }
+            for (let i = 0; i < aEle3.length; i++) {
+                setStyle(delayTime, aEle3[i], i, aEle3.length)
             }
         }
 
-        // 设置事件监听器
-        function setupEventListeners() {
-            // 开始按钮点击事件
-            startButton.addEventListener('click', startExperience);
-            
-            // 控制按钮事件
-            zoomInBtn.addEventListener('click', () => {
-                heartSize = Math.min(800, heartSize + 50);
-                heartContainer.style.width = `${heartSize}px`;
-                heartContainer.style.height = `${heartSize}px`;
-                createHeartLayout();
-            });
-            
-            zoomOutBtn.addEventListener('click', () => {
-                heartSize = Math.max(300, heartSize - 50);
-                heartContainer.style.width = `${heartSize}px`;
-                heartContainer.style.height = `${heartSize}px`;
-                createHeartLayout();
-            });
-            
-            playPauseBtn.addEventListener('click', toggleAnimation);
-            
-            musicBtn.addEventListener('click', toggleMusic);
-            
-            // 照片点击事件
-            heartContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('heart-photo')) {
-                    openModal(e.target.src, e.target.alt);
-                }
-            });
-            
-            // 模态框关闭事件
-            modalClose.addEventListener('click', closeModal);
-            imageModal.addEventListener('click', (e) => {
-                if (e.target === imageModal) {
-                    closeModal();
-                }
-            });
-            
-            // 键盘事件 - 按ESC关闭模态框
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeModal();
-                }
-            });
-            
-            // 拖拽事件
-            setupDragEvents();
-            
-            // 鼠标滚轮事件
-            document.addEventListener('wheel', handleWheel);
-            
-            // 窗口大小变化时重新居中
-            window.addEventListener('resize', centerHeartWall);
-        }
-
-        // 开始体验
-        function startExperience() {
-            startContainer.style.display = 'none';
-            heartWall.style.display = 'flex'; // 使用flex确保居中
-            controls.classList.add('show');
-            
-            // 如果尚未初始化，则初始化照片墙
-            if (!isInitialized) {
-                init();
-            }
-            
-            // 播放音乐
-            backgroundMusic.volume = 0.5;
-            backgroundMusic.play().then(() => {
-                isMusicPlaying = true;
-                musicBtn.innerHTML = '<i>♪</i>';
-            }).catch(error => {
-                console.log('自动播放被阻止:', error);
-                // 显示提示，让用户手动播放
-                musicBtn.innerHTML = '<i>🔇</i>';
-            });
-            
-            // 添加点击特效
-            addClickEffect();
-            
-            // 确保心形居中
-            centerHeartWall();
-        }
-
-        // 确保心形照片墙居中
-        function centerHeartWall() {
-            // 获取视口尺寸
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            
-            // 计算心形容器的最大可用尺寸
-            const maxHeartSize = Math.min(viewportWidth, viewportHeight) * 0.8;
-            
-            // 如果当前心形尺寸超过最大可用尺寸，则调整
-            if (heartSize > maxHeartSize) {
-                heartSize = maxHeartSize;
-                heartContainer.style.width = `${heartSize}px`;
-                heartContainer.style.height = `${heartSize}px`;
-                createHeartLayout();
-            }
-        }
-
-        // 添加点击特效
-        function addClickEffect() {
-            !function(e, t, a) {
+        let click_me_shell = document.getElementById("click_me_shell")
+        click_me_shell.onclick = () => {
+            /* console.log('点击了') */
+            outDom.style.display = '';
+            click_me_shell.style.display = 'none';
+            let audio = document.getElementById('audio');
+            audio.play();
+            ! function (e, t, a) {
                 function r() {
-                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+                    for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e,
+                        1)) : (s[
+                            e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[
+                            e].x +
+                        "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale +
+                        "," + s[e]
+                        .scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
                     requestAnimationFrame(r)
                 }
+
                 function n() {
                     var t = "function" == typeof e.onclick && e.onclick;
-                    e.onclick = function(e) {
+                    e.onclick = function (e) {
                         t && t(), o(e)
                     }
                 }
+
                 function o(e) {
                     var a = t.createElement("div");
                     a.className = "heart", s.push({
@@ -687,6 +321,7 @@
                         color: c()
                     }), t.body.appendChild(a)
                 }
+
                 function i(e) {
                     var a = t.createElement("style");
                     a.type = "text/css";
@@ -697,129 +332,94 @@
                     }
                     t.getElementsByTagName("head")[0].appendChild(a)
                 }
+
                 function c() {
-                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math
+                        .random()) + ")"
                 }
                 var s = [];
-                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function(e) {
-                    setTimeout(e, 1e3 / 60)
-                }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+                e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e
+                    .mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (
+                        e) {
+                        setTimeout(e, 1e3 / 60)
+                    }, i(
+                        ".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"
+                    ), n(), r()
             }(window, document);
+            setTimeout(init, 1000);
         }
 
-        // 切换动画状态
-        function toggleAnimation() {
-            isPlaying = !isPlaying;
-            const photos = document.querySelectorAll('.heart-photo');
-            
-            photos.forEach(photo => {
-                if (isPlaying) {
-                    photo.style.animationPlayState = 'running';
-                } else {
-                    photo.style.animationPlayState = 'paused';
-                }
-            });
-            
-            playPauseBtn.innerHTML = isPlaying ? '<i>❚❚</i>' : '<i>▶</i>';
+
+        //鼠标滚动事件
+        document.onmousewheel = function (e) {
+            e || e.window.event;
+            let d = e.wheelDelta / 20 || -e.detail;
+            radius += d;
+            //展开大小
+            init(1);
+        }
+        //暂停开始旋转
+        function playSpin(yes) {
+            spinDom.style.animationPlayState = (yes ? 'running' : 'paused');
         }
 
-        // 切换音乐状态
-        function toggleMusic() {
-            if (isMusicPlaying) {
-                backgroundMusic.pause();
-                musicBtn.innerHTML = '<i>🔇</i>';
-            } else {
-                backgroundMusic.play();
-                musicBtn.innerHTML = '<i>♪</i>';
-            }
-            isMusicPlaying = !isMusicPlaying;
+        function changeRotate(obj) {
+            // X轴旋转0-180度
+            if (tY > 180)
+                tY = 180;
+            if (tY < 0)
+                tY = 0;
+            // y轴旋转角度不限制
+            obj.style.transform = "rotateX(" + (-tY) + "deg) rotateY(" + (tX) + "deg)";
         }
+        let startX, startY, endX, endY, tX = 0,
+            tY = 10,
+            desX = 0,
+            desY = 0;
 
-        // 打开模态框
-        function openModal(imageSrc, imageAlt) {
-            modalImage.src = imageSrc;
-            modalImage.alt = imageAlt;
-            imageModal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // 防止背景滚动
-        }
-
-        // 关闭模态框
-        function closeModal() {
-            imageModal.classList.remove('active');
-            document.body.style.overflow = ''; // 恢复背景滚动
-        }
-
-        // 设置拖拽事件
-        function setupDragEvents() {
-            document.addEventListener('pointerdown', (e) => {
-                isDragging = true;
-                clearInterval(heartContainer.timer);
-                startX = e.clientX;
-                startY = e.clientY;
-                
-                document.addEventListener('pointermove', handlePointerMove);
-                document.addEventListener('pointerup', handlePointerUp);
-            });
-            
-            function handlePointerMove(e) {
-                if (!isDragging) return;
-                
-                toggleAnimation();
-                
-                endX = e.clientX;
-                endY = e.clientY;
-                
+        //鼠标移动事件
+        document.onpointerdown = function (e) {
+            //清除惯性定时器
+            clearInterval(outDom.timer);
+            e = e || ewindow.event;
+            //鼠标点击位置
+            startX = e.clientX, startY = e.clientY;
+            this.onpointermove = function (e) {
+                playSpin(false);
+                //鼠标点击时 停止自动旋转//鼠标点击时 停止自动旋转
+                e = e || window.event;
+                //记录结束时位置
+                endX = e.clientX,
+                    endY = e.clientY;
+                //计算移动距离 并修改角度
                 desX = endX - startX;
                 desY = endY - startY;
-                
                 tX += desX * 0.1;
                 tY += desY * 0.1;
-                
-                // 限制旋转角度
-                tX = tX % 360;
-                tY = Math.max(-30, Math.min(30, tY));
-                
-                heartContainer.style.transform = `rotateX(${-tY}deg) rotateY(${tX}deg)`;
-                
+                changeRotate(outDom);
                 startX = endX;
                 startY = endY;
             }
-            
-            function handlePointerUp() {
-                isDragging = false;
-                
-                // 惯性效果
-                heartContainer.timer = setInterval(() => {
+            //鼠标离开时 开始自动旋转
+            this.onpointerup = function (e) {
+                //惯性旋转
+                outDom.timer = setInterval(function () {
                     desX *= 0.95;
                     desY *= 0.95;
                     tX += desX * 0.1;
                     tY += desY * 0.1;
-                    
-                    heartContainer.style.transform = `rotateX(${-tY}deg) rotateY(${tX}deg)`;
-                    
+                    changeRotate(outDom);
+                    playSpin(false);
                     if (Math.abs(desX) < 0.5 && Math.abs(desY) < 0.5) {
-                        clearInterval(heartContainer.timer);
-                        toggleAnimation();
+                        clearInterval(outDom.timer);
+                        playSpin(true);
                     }
-                }, 16);
-                
-                document.removeEventListener('pointermove', handlePointerMove);
-                document.removeEventListener('pointerup', handlePointerUp);
+                })
+                this.onpointermove = this.onpointerup = null;
             }
+            return false;
         }
-
-        // 处理鼠标滚轮
-        function handleWheel(e) {
-            e.preventDefault();
-            const delta = e.deltaY > 0 ? -20 : 20;
-            heartSize = Math.max(300, Math.min(800, heartSize + delta));
-            heartContainer.style.width = `${heartSize}px`;
-            heartContainer.style.height = `${heartSize}px`;
-            createHeartLayout();
-        }
-
-        // 初始化应用
-        init();
     </script>
 </body>
+
 </html>
