@@ -5,25 +5,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3d照片表白墙</title>
+    <title>我们的回忆</title>
     <style>
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         html,
         body {
             height: 100%;
             touch-action: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* perspective指定了观察者与 Z=9 平面的距离，使具有三维位置变换的元素产生透视效果。 */
         body {
             overflow: hidden;
             display: flex;
             perspective: 1000px;
-            background: #111;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
         }
 
         @property --d {
@@ -102,15 +104,33 @@
 
         .click_me_shell {
             margin: 0;
-            /* min-height: 100vh; */
             display: grid;
             place-content: center;
             grid-auto-flow: column;
-            background-color: #1b1b1c;
+            background-color: rgba(27, 27, 28, 0.8);
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+
+        .title {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            text-align: center;
+            background: linear-gradient(45deg, #21D4FD, #B721FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(33, 212, 253, 0.3);
         }
 
         #dragBox,
@@ -150,15 +170,136 @@
             width: 100%;
             height: 100%;
             box-shadow: 0 0 8px #fff;
-            /*倒影 */
             -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, #0005);
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         #dragBox img:hover {
-            box-shadow: 0 0 15px #fff;
+            box-shadow: 0 0 15px #ffdd00;
+            transform: scale(1.05);
         }
 
-        /*自动旋转 */
+        /* 图片查看模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(33, 212, 253, 0.5);
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 101;
+        }
+
+        .close:hover {
+            color: #21D4FD;
+            transform: scale(1.2);
+        }
+
+        .caption {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            font-size: 18px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* 控制按钮 */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 50;
+        }
+
+        .control-btn {
+            background: rgba(33, 212, 253, 0.2);
+            border: 1px solid #21D4FD;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            backdrop-filter: blur(5px);
+        }
+
+        .control-btn:hover {
+            background: rgba(33, 212, 253, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33, 212, 253, 0.4);
+        }
+
+        /* 心形动画 */
+        .heart {
+            width: 10px;
+            height: 10px;
+            position: fixed;
+            background: #f00;
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            pointer-events: none;
+            z-index: 99999;
+        }
+
+        .heart:after,
+        .heart:before {
+            content: '';
+            width: inherit;
+            height: inherit;
+            background: inherit;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            position: fixed;
+        }
+
+        .heart:after {
+            top: -5px;
+        }
+
+        .heart:before {
+            left: -5px;
+        }
+
+        /* 动画 */
         @keyframes spin {
             from {
                 transform: rotateY(0deg);
@@ -168,88 +309,142 @@
                 transform: rotateY(360deg);
             }
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .spinBox {
+                width: 100px;
+                height: 120px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .control-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="click_me_shell" id="click_me_shell">
-        <audio loop src="img/落在生命里的光-尹昔眠.m4a" id="audio" autoplay preload="auto"></audio>
-        <button class="click_me">Click Me</button>
+        <h1 class="title">我们的回忆</h1>
+        <audio loop src="img/落在生命里的光-尹昔眠.m4a" id="audio" preload="auto"></audio>
+        <button class="click_me">开启回忆之旅</button>
     </div>
+
     <div id="dragBox">
         <div class="spinBox" id="spinBox">
-            <img src="img/1.webp">
-            <img src="img/2.webp">
-            <img src="img/3.webp">
-            <img src="img/4.webp">
-            <img src="img/6.webp">
-            <img src="img/7.webp">
-            <img src="img/8.webp">
-            <img src="img/1.webp">
-            <img src="img/2.webp">
-            <img src="img/3.webp">
-            <img src="img/4.webp">
-            <img src="img/6.webp">
-            <img src="img/7.webp">
-            <img src="img/8.webp">
-            <img src="img/1.webp">
-            <img src="img/2.webp">
-            <img src="img/3.webp">
-            <img src="img/4.webp">
-            <img src="img/6.webp">
-            <img src="img/7.webp">
-            <img src="img/8.webp">
+            <!-- 图片列表 -->
+            <img src="img/1.webp" alt="回忆照片1">
+            <img src="img/2.webp" alt="回忆照片2">
+            <img src="img/3.webp" alt="回忆照片3">
+            <img src="img/4.webp" alt="回忆照片4">
+            <img src="img/6.webp" alt="回忆照片6">
+            <img src="img/7.webp" alt="回忆照片7">
+            <img src="img/8.webp" alt="回忆照片8">
+            <img src="img/9.webp" alt="回忆照片9">
+            <img src="img/10.webp" alt="回忆照片10">
+            <img src="img/11.webp" alt="回忆照片11">
+            <img src="img/12.webp" alt="回忆照片12">
+            <img src="img/13.webp" alt="回忆照片13">
+            <img src="img/14.webp" alt="回忆照片14">
+            <img src="img/15.webp" alt="回忆照片15">
+            <img src="img/16.webp" alt="回忆照片16">
+            <img src="img/17.webp" alt="回忆照片17">
+            <img src="img/18.webp" alt="回忆照片18">
+            <img src="img/19.webp" alt="回忆照片19">
+            <img src="img/20.webp" alt="回忆照片20">
+            <img src="img/9.webp" alt="回忆照片9">
+            <img src="img/2.webp" alt="回忆照片2">
         </div>
         <div class="spinBox" id="spinBox2">
-            <img src="img/2.webp">
-            <img src="img/3.webp">
-            <img src="img/4.webp">
-            <img src="img/6.webp">
-            <img src="img/7.webp">
-            <img src="img/8.webp">
-            <img src="img/1.webp">
-            <img src="img/2.webp">
-            <img src="img/3.webp">
-            <img src="img/4.webp">
-            <img src="img/6.webp">
-            <img src="img/7.webp">
-            <img src="img/8.webp">
-            <img src="img/1.webp">
-            <img src="img/2.webp">
-            <img src="img/3.webp">
-            <img src="img/4.webp">
-            <img src="img/6.webp">
-            <img src="img/7.webp">
-            <img src="img/8.webp">
-            <img src="img/1.webp">
+            <!-- 图片列表 -->
+            <img src="img/2.webp" alt="回忆照片2">
+            <img src="img/3.webp" alt="回忆照片3">
+            <img src="img/4.webp" alt="回忆照片4">
+            <img src="img/6.webp" alt="回忆照片6">
+            <img src="img/7.webp" alt="回忆照片7">
+            <img src="img/8.webp" alt="回忆照片8">
+            <img src="img/9.webp" alt="回忆照片9">
+            <img src="img/10.webp" alt="回忆照片10">
+            <img src="img/11.webp" alt="回忆照片11">
+            <img src="img/12.webp" alt="回忆照片12">
+            <img src="img/13.webp" alt="回忆照片13">
+            <img src="img/14.webp" alt="回忆照片14">
+            <img src="img/15.webp" alt="回忆照片15">
+            <img src="img/16.webp" alt="回忆照片16">
+            <img src="img/17.webp" alt="回忆照片17">
+            <img src="img/18.webp" alt="回忆照片18">
+            <img src="img/19.webp" alt="回忆照片19">
+            <img src="img/20.webp" alt="回忆照片20">
+            <img src="img/1.webp" alt="回忆照片1">
+            <img src="img/14.webp" alt="回忆照片14">
+            <img src="img/6.webp" alt="回忆照片6">
         </div>
         <div class="spinBox" id="spinBox3">
-            <img src="img/3.webp">
-            <img src="img/4.webp">
-            <img src="img/6.webp">
-            <img src="img/7.webp">
-            <img src="img/8.webp">
-            <img src="img/1.webp">
-            <img src="img/2.webp">
-            <img src="img/3.webp">
-            <img src="img/4.webp">
-            <img src="img/6.webp">
-            <img src="img/7.webp">
-            <img src="img/8.webp">
-            <img src="img/1.webp">
-            <img src="img/2.webp">
-            <img src="img/3.webp">
-            <img src="img/4.webp">
-            <img src="img/6.webp">
-            <img src="img/7.webp">
-            <img src="img/8.webp">
-            <img src="img/1.webp">
-            <img src="img/2.webp">
+            <!-- 图片列表 -->
+            <img src="img/3.webp" alt="回忆照片3">
+            <img src="img/4.webp" alt="回忆照片4">
+            <img src="img/6.webp" alt="回忆照片6">
+            <img src="img/7.webp" alt="回忆照片7">
+            <img src="img/8.webp" alt="回忆照片8">
+            <img src="img/9.webp" alt="回忆照片9">
+            <img src="img/10.webp" alt="回忆照片10">
+            <img src="img/11.webp" alt="回忆照片11">
+            <img src="img/12.webp" alt="回忆照片12">
+            <img src="img/13.webp" alt="回忆照片13">
+            <img src="img/14.webp" alt="回忆照片14">
+            <img src="img/15.webp" alt="回忆照片15">
+            <img src="img/16.webp" alt="回忆照片16">
+            <img src="img/17.webp" alt="回忆照片17">
+            <img src="img/18.webp" alt="回忆照片18">
+            <img src="img/19.webp" alt="回忆照片19">
+            <img src="img/20.webp" alt="回忆照片20">
+            <img src="img/1.webp" alt="回忆照片1">
+            <img src="img/2.webp" alt="回忆照片2">
+            <img src="img/18.webp" alt="回忆照片18">
+            <img src="img/9.webp" alt="回忆照片9">
         </div>
     </div>
+
+    <!-- 图片查看模态框 -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImg">
+        <div class="caption" id="caption"></div>
+    </div>
+
+    <!-- 控制按钮 -->
+    <div class="controls">
+        <button class="control-btn" id="zoomIn">放大</button>
+        <button class="control-btn" id="zoomOut">缩小</button>
+        <button class="control-btn" id="pauseBtn">暂停旋转</button>
+        <button class="control-btn" id="resetBtn">重置视角</button>
+    </div>
+
     <script>
+        // 初始化变量
         let radius = 560;
-        //相册展开大小
+        let isPlaying = true;
         let outDom = document.getElementById("dragBox");
         outDom.style.display = 'none';
 
@@ -265,8 +460,8 @@
         let aEle2 = [...aImg2];
         let aEle3 = [...aImg3];
 
+        // 设置图片位置和动画
         function setStyle(delayTime, dom, i, len) {
-            //给元素加动画 展开
             dom.style.transform = "rotateY(" + (i * (360 / len)) + "deg) translateZ(" + radius + "px)";
             dom.style.transition = "transform 1s";
             dom.style.transitionDelay = delayTime || (len - i) / 4 + "s";
@@ -284,13 +479,15 @@
             }
         }
 
+        // 点击开始按钮
         let click_me_shell = document.getElementById("click_me_shell")
         click_me_shell.onclick = () => {
-            /* console.log('点击了') */
             outDom.style.display = '';
             click_me_shell.style.display = 'none';
             let audio = document.getElementById('audio');
             audio.play();
+            
+            // 添加心形动画
             ! function (e, t, a) {
                 function r() {
                     for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e,
@@ -298,7 +495,8 @@
                             e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[
                             e].x +
                         "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale +
-                        "," + s[e]
+                        "," + s[
+                            e]
                         .scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
                     requestAnimationFrame(r)
                 }
@@ -346,23 +544,30 @@
                         ".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"
                     ), n(), r()
             }(window, document);
+            
             setTimeout(init, 1000);
         }
 
-
-        //鼠标滚动事件
+        // 鼠标滚动事件
         document.onmousewheel = function (e) {
             e || e.window.event;
             let d = e.wheelDelta / 20 || -e.detail;
             radius += d;
-            //展开大小
+            // 限制半径范围
+            radius = Math.max(300, Math.min(800, radius));
             init(1);
         }
-        //暂停开始旋转
+
+        // 暂停/开始旋转
         function playSpin(yes) {
+            isPlaying = yes;
             spinDom.style.animationPlayState = (yes ? 'running' : 'paused');
+            spinDom2.style.animationPlayState = (yes ? 'running' : 'paused');
+            spinDom3.style.animationPlayState = (yes ? 'running' : 'paused');
+            document.getElementById('pauseBtn').textContent = yes ? '暂停旋转' : '继续旋转';
         }
 
+        // 改变旋转角度
         function changeRotate(obj) {
             // X轴旋转0-180度
             if (tY > 180)
@@ -372,26 +577,26 @@
             // y轴旋转角度不限制
             obj.style.transform = "rotateX(" + (-tY) + "deg) rotateY(" + (tX) + "deg)";
         }
+
         let startX, startY, endX, endY, tX = 0,
             tY = 10,
             desX = 0,
             desY = 0;
 
-        //鼠标移动事件
+        // 鼠标移动事件
         document.onpointerdown = function (e) {
-            //清除惯性定时器
+            // 清除惯性定时器
             clearInterval(outDom.timer);
-            e = e || ewindow.event;
-            //鼠标点击位置
+            e = e || window.event;
+            // 鼠标点击位置
             startX = e.clientX, startY = e.clientY;
             this.onpointermove = function (e) {
                 playSpin(false);
-                //鼠标点击时 停止自动旋转//鼠标点击时 停止自动旋转
                 e = e || window.event;
-                //记录结束时位置
+                // 记录结束时位置
                 endX = e.clientX,
-                    endY = e.clientY;
-                //计算移动距离 并修改角度
+                endY = e.clientY;
+                // 计算移动距离 并修改角度
                 desX = endX - startX;
                 desY = endY - startY;
                 tX += desX * 0.1;
@@ -400,9 +605,9 @@
                 startX = endX;
                 startY = endY;
             }
-            //鼠标离开时 开始自动旋转
+            // 鼠标离开时 开始自动旋转
             this.onpointerup = function (e) {
-                //惯性旋转
+                // 惯性旋转
                 outDom.timer = setInterval(function () {
                     desX *= 0.95;
                     desY *= 0.95;
@@ -414,11 +619,68 @@
                         clearInterval(outDom.timer);
                         playSpin(true);
                     }
-                })
+                }, 16);
                 this.onpointermove = this.onpointerup = null;
             }
             return false;
         }
+
+        // 图片点击查看功能
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImg");
+        const caption = document.getElementById("caption");
+
+        // 为所有图片添加点击事件
+        function addImageClickEvents() {
+            const images = document.querySelectorAll('#dragBox img');
+            images.forEach(img => {
+                img.addEventListener('click', function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                    caption.innerHTML = this.alt;
+                });
+            });
+        }
+
+        // 关闭模态框
+        const closeBtn = document.getElementsByClassName("close")[0];
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // 点击模态框背景关闭
+        modal.onclick = function(e) {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // 控制按钮功能
+        document.getElementById('zoomIn').addEventListener('click', function() {
+            radius = Math.min(800, radius + 50);
+            init(1);
+        });
+
+        document.getElementById('zoomOut').addEventListener('click', function() {
+            radius = Math.max(300, radius - 50);
+            init(1);
+        });
+
+        document.getElementById('pauseBtn').addEventListener('click', function() {
+            playSpin(!isPlaying);
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            tX = 0;
+            tY = 10;
+            radius = 560;
+            changeRotate(outDom);
+            init(1);
+            playSpin(true);
+        });
+
+        // 初始化图片点击事件
+        setTimeout(addImageClickEvents, 1500);
     </script>
 </body>
 
