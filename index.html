@@ -128,13 +128,14 @@
             width: 100%;
             height: 100%;
             display: none;
+            justify-content: center;
+            align-items: center;
         }
 
         #heartContainer {
             position: relative;
             width: 600px;
             height: 600px;
-            margin: auto;
             transform-style: preserve-3d;
             transition: transform 0.5s ease;
         }
@@ -317,11 +318,18 @@
             #heartContainer {
                 width: 400px;
                 height: 400px;
+                margin: 0 auto;
             }
             
             .heart-photo {
                 width: 80px;
                 height: 100px;
+            }
+            
+            /* 确保心形在移动端居中 */
+            .heart-wall {
+                padding: 20px;
+                overflow: hidden;
             }
         }
 
@@ -350,13 +358,33 @@
             
             /* 小屏幕心形照片墙优化 */
             #heartContainer {
-                width: 300px;
-                height: 300px;
+                width: 320px;
+                height: 320px;
+                margin: 0 auto;
             }
             
             .heart-photo {
                 width: 60px;
                 height: 80px;
+            }
+            
+            /* 确保心形在小屏幕上居中 */
+            .heart-wall {
+                padding: 15px;
+                overflow: hidden;
+            }
+        }
+
+        /* 超小屏幕手机优化 */
+        @media (max-width: 360px) {
+            #heartContainer {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .heart-photo {
+                width: 50px;
+                height: 65px;
             }
         }
 
@@ -583,12 +611,15 @@
             
             // 鼠标滚轮事件
             document.addEventListener('wheel', handleWheel);
+            
+            // 窗口大小变化时重新居中
+            window.addEventListener('resize', centerHeartWall);
         }
 
         // 开始体验
         function startExperience() {
             startContainer.style.display = 'none';
-            heartWall.style.display = 'block';
+            heartWall.style.display = 'flex'; // 使用flex确保居中
             controls.classList.add('show');
             
             // 如果尚未初始化，则初始化照片墙
@@ -609,6 +640,27 @@
             
             // 添加点击特效
             addClickEffect();
+            
+            // 确保心形居中
+            centerHeartWall();
+        }
+
+        // 确保心形照片墙居中
+        function centerHeartWall() {
+            // 获取视口尺寸
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // 计算心形容器的最大可用尺寸
+            const maxHeartSize = Math.min(viewportWidth, viewportHeight) * 0.8;
+            
+            // 如果当前心形尺寸超过最大可用尺寸，则调整
+            if (heartSize > maxHeartSize) {
+                heartSize = maxHeartSize;
+                heartContainer.style.width = `${heartSize}px`;
+                heartContainer.style.height = `${heartSize}px`;
+                createHeartLayout();
+            }
         }
 
         // 添加点击特效
