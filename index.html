@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我们的回忆</title>
+    <title>数据档案：我们的回忆</title>
     <style>
         * {
             margin: 0;
@@ -14,19 +14,20 @@
         html, body {
             height: 100%;
             touch-action: none;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Orbitron', 'Rajdhani', sans-serif;
             overflow: hidden;
+            background: #000;
         }
 
         body {
             display: flex;
             perspective: 1000px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: radial-gradient(ellipse at center, #0a0e2a 0%, #050716 70%);
             color: #fff;
             position: relative;
         }
 
-        /* 粒子背景 */
+        /* 科幻粒子背景 */
         #particles-js {
             position: absolute;
             width: 100%;
@@ -40,36 +41,39 @@
             initial-value: 0deg;
         }
 
-        /* 启动界面样式 */
+        /* 启动界面样式 - 科幻风格 */
         .click_me_shell {
             margin: 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: rgba(10, 10, 20, 0.85);
+            background: rgba(5, 10, 30, 0.85);
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 10;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
             transition: opacity 1s ease;
+            border: 1px solid rgba(0, 195, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 195, 255, 0.1);
         }
 
         .title {
             font-size: 3.5rem;
             text-align: center;
-            background: linear-gradient(45deg, #21D4FD, #B721FF, #21D4FD);
+            background: linear-gradient(45deg, #00c3ff, #00ff95, #00c3ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            font-weight: 800;
-            text-shadow: 0 0 15px rgba(33, 212, 253, 0.5);
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(0, 195, 255, 0.7);
             margin-bottom: 2rem;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             position: relative;
+            font-family: 'Orbitron', sans-serif;
         }
 
         .title::after {
@@ -78,18 +82,21 @@
             bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 150px;
+            width: 200px;
             height: 3px;
-            background: linear-gradient(90deg, transparent, #21D4FD, #B721FF, transparent);
+            background: linear-gradient(90deg, transparent, #00c3ff, #00ff95, transparent);
+            box-shadow: 0 0 10px rgba(0, 195, 255, 0.7);
         }
 
         .subtitle {
             font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(0, 195, 255, 0.8);
             margin-bottom: 3rem;
             text-align: center;
             max-width: 500px;
             line-height: 1.6;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
         }
 
         .click_me {
@@ -109,7 +116,7 @@
             align-items: center;
             text-align: center;
             padding: 20px;
-            box-shadow: 0 0 30px rgba(33, 212, 253, 0.3);
+            box-shadow: 0 0 30px rgba(0, 195, 255, 0.3);
         }
 
         .click_me:before {
@@ -119,11 +126,11 @@
             padding: 10px;
             border-radius: 50%;
             background: conic-gradient(from var(--d, 0deg),
-                    #21D4FD,
+                    #00c3ff,
                     #0000 30deg 120deg,
-                    #B721FF 150deg 180deg,
+                    #00ff95 150deg 180deg,
                     #0000 210deg 300deg,
-                    #21D4FD 330deg);
+                    #00c3ff 330deg);
             -webkit-mask:
                 linear-gradient(#000 0 0) content-box,
                 linear-gradient(#000 0 0);
@@ -137,8 +144,8 @@
             position: absolute;
             inset: -120px;
             background:
-                radial-gradient(80px at left 150px top 120px, #21D4FD 98%, #0000),
-                radial-gradient(80px at right 150px bottom 120px, #B721FF 98%, #0000);
+                radial-gradient(80px at left 150px top 120px, #00c3ff 98%, #0000),
+                radial-gradient(80px at right 150px bottom 120px, #00ff95 98%, #0000);
             filter: blur(60px);
             opacity: 0.5;
             z-index: -1;
@@ -151,7 +158,7 @@
 
         .click_me:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 50px rgba(33, 212, 253, 0.5);
+            box-shadow: 0 0 50px rgba(0, 195, 255, 0.5);
         }
 
         .click_me:hover:after {
@@ -165,15 +172,16 @@
         }
 
         .click_me_text {
-            background: linear-gradient(45deg, #21D4FD, #B721FF);
+            background: linear-gradient(45deg, #00c3ff, #00ff95);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             font-weight: bold;
             z-index: 2;
+            font-family: 'Orbitron', sans-serif;
         }
 
-        /* 3D相册样式 */
+        /* 3D相册样式 - 科幻风格 */
         #dragBox,
         .spinBox {
             position: relative;
@@ -211,23 +219,59 @@
             top: 0;
             width: 100%;
             height: 100%;
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 12px rgba(0, 195, 255, 0.5);
             -webkit-box-reflect: below 15px linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.4));
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.4s ease;
             filter: brightness(0.9);
+            border: 1px solid rgba(0, 195, 255, 0.3);
         }
 
         #dragBox img:hover {
-            box-shadow: 0 0 20px #ffdd00;
+            box-shadow: 0 0 20px #00ff95;
             transform: scale(1.08);
             filter: brightness(1.1);
             z-index: 10;
+            border-color: #00ff95;
         }
 
-        /* 图片查看模态框 */
+        /* 科幻数据面板 */
+        .data-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(5, 15, 30, 0.7);
+            border: 1px solid rgba(0, 195, 255, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 5;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(0, 195, 255, 0.2);
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .data-panel h3 {
+            color: #00ff95;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            border-bottom: 1px solid rgba(0, 195, 255, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .data-item {
+            margin: 8px 0;
+            font-size: 0.9rem;
+            color: #00c3ff;
+        }
+
+        .data-value {
+            color: #fff;
+            float: right;
+        }
+
+        /* 图片查看模态框 - 科幻风格 */
         .modal {
             display: none;
             position: fixed;
@@ -236,7 +280,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
+            background-color: rgba(0, 5, 15, 0.95);
             animation: fadeIn 0.4s;
         }
 
@@ -249,9 +293,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            border-radius: 12px;
-            box-shadow: 0 0 40px rgba(33, 212, 253, 0.6);
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(0, 195, 255, 0.6);
             animation: zoomIn 0.4s;
+            border: 1px solid rgba(0, 195, 255, 0.5);
         }
 
         .close {
@@ -270,13 +315,15 @@
             justify-content: center;
             align-items: center;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 15, 30, 0.7);
+            border: 1px solid rgba(0, 195, 255, 0.3);
         }
 
         .close:hover {
-            color: #21D4FD;
+            color: #00ff95;
             transform: scale(1.2) rotate(90deg);
-            background: rgba(33, 212, 253, 0.1);
+            background: rgba(0, 195, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 195, 255, 0.5);
         }
 
         .caption {
@@ -288,11 +335,13 @@
             color: #fff;
             font-size: 20px;
             padding: 15px;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 10, 25, 0.7);
             backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(0, 195, 255, 0.3);
+            font-family: 'Rajdhani', sans-serif;
         }
 
-        /* 控制按钮 - 恢复原样 */
+        /* 控制按钮 - 科幻风格 */
         .controls {
             position: fixed;
             bottom: 30px;
@@ -301,46 +350,70 @@
             display: flex;
             gap: 12px;
             z-index: 50;
-            background: rgba(33, 212, 253, 0.1);
+            background: rgba(0, 195, 255, 0.1);
             padding: 12px 20px;
-            border-radius: 50px;
+            border-radius: 8px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(33, 212, 253, 0.3);
+            border: 1px solid rgba(0, 195, 255, 0.3);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
         .control-btn {
-            background: rgba(33, 212, 253, 0.2);
-            border: 1px solid #21D4FD;
-            color: white;
+            background: rgba(0, 195, 255, 0.2);
+            border: 1px solid #00c3ff;
+            color: #00c3ff;
             padding: 10px 18px;
-            border-radius: 25px;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s;
             font-size: 14px;
             font-weight: 500;
             white-space: nowrap;
             min-width: 80px;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
         }
 
         .control-btn:hover {
-            background: rgba(33, 212, 253, 0.4);
+            background: rgba(0, 195, 255, 0.4);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(33, 212, 253, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 195, 255, 0.4);
+            color: #00ff95;
+            border-color: #00ff95;
         }
 
-        /* 心形动画 */
+        /* 扫描线效果 */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.03) 50%,
+                rgba(255,255,255,0) 100%
+            );
+            background-size: 100% 4px;
+            z-index: 2;
+            pointer-events: none;
+            animation: scanline 10s linear infinite;
+        }
+
+        /* 心形动画 - 科幻风格 */
         .heart {
             width: 12px;
             height: 12px;
             position: fixed;
-            background: #ff4d6d;
+            background: #00ff95;
             transform: rotate(45deg);
             -webkit-transform: rotate(45deg);
             -moz-transform: rotate(45deg);
             pointer-events: none;
             z-index: 99999;
             opacity: 0.8;
+            box-shadow: 0 0 10px #00ff95;
         }
 
         .heart:after,
@@ -402,6 +475,15 @@
             }
         }
 
+        @keyframes scanline {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 0 100%;
+            }
+        }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             .title {
@@ -430,13 +512,19 @@
                 max-width: 90%;
                 gap: 8px;
                 padding: 10px 15px;
-                border-radius: 25px;
+                border-radius: 8px;
             }
             
             .control-btn {
                 padding: 8px 12px;
                 font-size: 12px;
                 min-width: 70px;
+            }
+            
+            .data-panel {
+                top: 10px;
+                left: 10px;
+                padding: 10px;
             }
         }
 
@@ -455,94 +543,108 @@
     </style>
     <!-- 引入粒子效果库 -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- 引入科幻字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- 扫描线效果 -->
+    <div class="scanlines"></div>
+    
     <!-- 粒子背景 -->
     <div id="particles-js"></div>
 
+    <!-- 科幻数据面板 -->
+    <div class="data-panel">
+        <h3>数据档案</h3>
+        <div class="data-item">系统状态: <span class="data-value" id="systemStatus">待机</span></div>
+        <div class="data-item">档案数量: <span class="data-value" id="archiveCount">0</span></div>
+        <div class="data-item">旋转速度: <span class="data-value" id="rotationSpeed">正常</span></div>
+        <div class="data-item">能量水平: <span class="data-value" id="energyLevel">100%</span></div>
+    </div>
+
     <!-- 启动界面 -->
     <div class="click_me_shell" id="click_me_shell">
-        <h1 class="title">我们的回忆</h1>
-        <p class="subtitle">珍藏每一刻美好，让时光在指尖流转</p>
+        <h1 class="title">数据档案：我们的回忆</h1>
+        <p class="subtitle">量子存储系统启动中... 准备加载记忆数据</p>
         <audio loop src="img/Music.mp3" id="audio" preload="auto"></audio>
         <button class="click_me">
-            <span class="click_me_text">开启回忆<br>之旅</span>
+            <span class="click_me_text">启动量子<br>存储系统</span>
         </button>
     </div>
 
     <!-- 3D相册 -->
-<div id="dragBox">
+    <div id="dragBox">
         <div class="spinBox" id="spinBox">
             <!-- 图片列表 -->
-            <img src="img/1.webp" alt="回忆照片1">
-            <img src="img/2.webp" alt="回忆照片2">
-            <img src="img/3.webp" alt="回忆照片3">
-            <img src="img/4.webp" alt="回忆照片4">
-            <img src="img/6.webp" alt="回忆照片6">
-            <img src="img/7.webp" alt="回忆照片7">
-            <img src="img/8.webp" alt="回忆照片8">
-            <img src="img/9.webp" alt="回忆照片9">
-            <img src="img/10.webp" alt="回忆照片10">
-            <img src="img/11.webp" alt="回忆照片11">
-            <img src="img/12.webp" alt="回忆照片12">
-            <img src="img/13.webp" alt="回忆照片13">
-            <img src="img/14.webp" alt="回忆照片14">
-            <img src="img/15.webp" alt="回忆照片15">
-            <img src="img/16.webp" alt="回忆照片16">
-            <img src="img/17.webp" alt="回忆照片17">
-            <img src="img/18.webp" alt="回忆照片18">
-            <img src="img/19.webp" alt="回忆照片19">
-            <img src="img/20.webp" alt="回忆照片20">
-            <img src="img/9.webp" alt="回忆照片9">
-            <img src="img/2.webp" alt="回忆照片2">
+            <img src="img/1.webp" alt="记忆数据片段 #001">
+            <img src="img/2.webp" alt="记忆数据片段 #002">
+            <img src="img/3.webp" alt="记忆数据片段 #003">
+            <img src="img/4.webp" alt="记忆数据片段 #004">
+            <img src="img/6.webp" alt="记忆数据片段 #006">
+            <img src="img/7.webp" alt="记忆数据片段 #007">
+            <img src="img/8.webp" alt="记忆数据片段 #008">
+            <img src="img/9.webp" alt="记忆数据片段 #009">
+            <img src="img/10.webp" alt="记忆数据片段 #010">
+            <img src="img/11.webp" alt="记忆数据片段 #011">
+            <img src="img/12.webp" alt="记忆数据片段 #012">
+            <img src="img/13.webp" alt="记忆数据片段 #013">
+            <img src="img/14.webp" alt="记忆数据片段 #014">
+            <img src="img/15.webp" alt="记忆数据片段 #015">
+            <img src="img/16.webp" alt="记忆数据片段 #016">
+            <img src="img/17.webp" alt="记忆数据片段 #017">
+            <img src="img/18.webp" alt="记忆数据片段 #018">
+            <img src="img/19.webp" alt="记忆数据片段 #019">
+            <img src="img/20.webp" alt="记忆数据片段 #020">
+            <img src="img/9.webp" alt="记忆数据片段 #009">
+            <img src="img/2.webp" alt="记忆数据片段 #002">
         </div>
         <div class="spinBox" id="spinBox2">
             <!-- 图片列表 -->
-            <img src="img/2.webp" alt="回忆照片2">
-            <img src="img/3.webp" alt="回忆照片3">
-            <img src="img/4.webp" alt="回忆照片4">
-            <img src="img/6.webp" alt="回忆照片6">
-            <img src="img/7.webp" alt="回忆照片7">
-            <img src="img/8.webp" alt="回忆照片8">
-            <img src="img/9.webp" alt="回忆照片9">
-            <img src="img/10.webp" alt="回忆照片10">
-            <img src="img/11.webp" alt="回忆照片11">
-            <img src="img/12.webp" alt="回忆照片12">
-            <img src="img/13.webp" alt="回忆照片13">
-            <img src="img/14.webp" alt="回忆照片14">
-            <img src="img/15.webp" alt="回忆照片15">
-            <img src="img/16.webp" alt="回忆照片16">
-            <img src="img/17.webp" alt="回忆照片17">
-            <img src="img/18.webp" alt="回忆照片18">
-            <img src="img/19.webp" alt="回忆照片19">
-            <img src="img/20.webp" alt="回忆照片20">
-            <img src="img/1.webp" alt="回忆照片1">
-            <img src="img/14.webp" alt="回忆照片14">
-            <img src="img/6.webp" alt="回忆照片6">
+            <img src="img/2.webp" alt="记忆数据片段 #002">
+            <img src="img/3.webp" alt="记忆数据片段 #003">
+            <img src="img/4.webp" alt="记忆数据片段 #004">
+            <img src="img/6.webp" alt="记忆数据片段 #006">
+            <img src="img/7.webp" alt="记忆数据片段 #007">
+            <img src="img/8.webp" alt="记忆数据片段 #008">
+            <img src="img/9.webp" alt="记忆数据片段 #009">
+            <img src="img/10.webp" alt="记忆数据片段 #010">
+            <img src="img/11.webp" alt="记忆数据片段 #011">
+            <img src="img/12.webp" alt="记忆数据片段 #012">
+            <img src="img/13.webp" alt="记忆数据片段 #013">
+            <img src="img/14.webp" alt="记忆数据片段 #014">
+            <img src="img/15.webp" alt="记忆数据片段 #015">
+            <img src="img/16.webp" alt="记忆数据片段 #016">
+            <img src="img/17.webp" alt="记忆数据片段 #017">
+            <img src="img/18.webp" alt="记忆数据片段 #018">
+            <img src="img/19.webp" alt="记忆数据片段 #019">
+            <img src="img/20.webp" alt="记忆数据片段 #020">
+            <img src="img/1.webp" alt="记忆数据片段 #001">
+            <img src="img/14.webp" alt="记忆数据片段 #014">
+            <img src="img/6.webp" alt="记忆数据片段 #006">
         </div>
         <div class="spinBox" id="spinBox3">
             <!-- 图片列表 -->
-            <img src="img/3.webp" alt="回忆照片3">
-            <img src="img/4.webp" alt="回忆照片4">
-            <img src="img/6.webp" alt="回忆照片6">
-            <img src="img/7.webp" alt="回忆照片7">
-            <img src="img/8.webp" alt="回忆照片8">
-            <img src="img/9.webp" alt="回忆照片9">
-            <img src="img/10.webp" alt="回忆照片10">
-            <img src="img/11.webp" alt="回忆照片11">
-            <img src="img/12.webp" alt="回忆照片12">
-            <img src="img/13.webp" alt="回忆照片13">
-            <img src="img/14.webp" alt="回忆照片14">
-            <img src="img/15.webp" alt="回忆照片15">
-            <img src="img/16.webp" alt="回忆照片16">
-            <img src="img/17.webp" alt="回忆照片17">
-            <img src="img/18.webp" alt="回忆照片18">
-            <img src="img/19.webp" alt="回忆照片19">
-            <img src="img/20.webp" alt="回忆照片20">
-            <img src="img/1.webp" alt="回忆照片1">
-            <img src="img/2.webp" alt="回忆照片2">
-            <img src="img/18.webp" alt="回忆照片18">
-            <img src="img/9.webp" alt="回忆照片9">
+            <img src="img/3.webp" alt="记忆数据片段 #003">
+            <img src="img/4.webp" alt="记忆数据片段 #004">
+            <img src="img/6.webp" alt="记忆数据片段 #006">
+            <img src="img/7.webp" alt="记忆数据片段 #007">
+            <img src="img/8.webp" alt="记忆数据片段 #008">
+            <img src="img/9.webp" alt="记忆数据片段 #009">
+            <img src="img/10.webp" alt="记忆数据片段 #010">
+            <img src="img/11.webp" alt="记忆数据片段 #011">
+            <img src="img/12.webp" alt="记忆数据片段 #012">
+            <img src="img/13.webp" alt="记忆数据片段 #013">
+            <img src="img/14.webp" alt="记忆数据片段 #014">
+            <img src="img/15.webp" alt="记忆数据片段 #015">
+            <img src="img/16.webp" alt="记忆数据片段 #016">
+            <img src="img/17.webp" alt="记忆数据片段 #017">
+            <img src="img/18.webp" alt="记忆数据片段 #018">
+            <img src="img/19.webp" alt="记忆数据片段 #019">
+            <img src="img/20.webp" alt="记忆数据片段 #020">
+            <img src="img/1.webp" alt="记忆数据片段 #001">
+            <img src="img/2.webp" alt="记忆数据片段 #002">
+            <img src="img/18.webp" alt="记忆数据片段 #018">
+            <img src="img/9.webp" alt="记忆数据片段 #009">
         </div>
     </div>
     <!-- 图片查看模态框 -->
@@ -596,11 +698,18 @@
             for (let i = 0; i < aEle3.length; i++) {
                 setStyle(delayTime, aEle3[i], i, aEle3.length)
             }
+            
+            // 更新数据面板
+            document.getElementById('archiveCount').textContent = aEle.length + aEle2.length + aEle3.length;
         }
 
         // 点击开始按钮
         let click_me_shell = document.getElementById("click_me_shell")
         click_me_shell.onclick = () => {
+            // 更新数据面板状态
+            document.getElementById('systemStatus').textContent = "运行中";
+            document.getElementById('energyLevel').textContent = "87%";
+            
             // 添加淡出效果
             click_me_shell.style.opacity = '0';
             setTimeout(() => {
@@ -611,24 +720,24 @@
             let audio = document.getElementById('audio');
             audio.play();
             
-            // 初始化粒子背景
+            // 初始化粒子背景 - 科幻风格
             particlesJS("particles-js", {
                 particles: {
-                    number: { value: 80, density: { enable: true, value_area: 800 } },
-                    color: { value: "#21D4FD" },
+                    number: { value: 120, density: { enable: true, value_area: 800 } },
+                    color: { value: "#00c3ff" },
                     shape: { type: "circle" },
                     opacity: { value: 0.5, random: true },
-                    size: { value: 3, random: true },
+                    size: { value: 2, random: true },
                     line_linked: {
                         enable: true,
                         distance: 150,
-                        color: "#B721FF",
-                        opacity: 0.4,
+                        color: "#00ff95",
+                        opacity: 0.3,
                         width: 1
                     },
                     move: {
                         enable: true,
-                        speed: 2,
+                        speed: 3,
                         direction: "none",
                         random: true,
                         straight: false,
@@ -646,7 +755,7 @@
                 }
             });
             
-            // 添加心形动画
+            // 添加心形动画 - 科幻风格
             ! function (e, t, a) {
                 function r() {
                     for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e,
@@ -675,7 +784,7 @@
                         y: e.clientY - 5,
                         scale: 1,
                         alpha: 1,
-                        color: c()
+                        color: "#00ff95"
                     }), t.body.appendChild(a)
                 }
 
@@ -690,17 +799,13 @@
                     t.getElementsByTagName("head")[0].appendChild(a)
                 }
 
-                function c() {
-                    return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math
-                        .random()) + ")"
-                }
                 var s = [];
                 e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e
                     .mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (
                         e) {
                         setTimeout(e, 1e3 / 60)
                     }, i(
-                        ".heart{width: 12px;height: 12px;position: fixed;background: #ff4d6d;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -6px;}.heart:before{left: -6px;}"
+                        ".heart{width: 12px;height: 12px;position: fixed;background: #00ff95;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);box-shadow: 0 0 10px #00ff95;}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -6px;}.heart:before{left: -6px;}"
                     ), n(), r()
             }(window, document);
             
@@ -724,6 +829,7 @@
             spinDom2.style.animationPlayState = (yes ? 'running' : 'paused');
             spinDom3.style.animationPlayState = (yes ? 'running' : 'paused');
             document.getElementById('pauseBtn').textContent = yes ? '暂停旋转' : '继续旋转';
+            document.getElementById('rotationSpeed').textContent = yes ? '正常' : '暂停';
         }
 
         // 改变旋转角度
