@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>数据档案：我们的回忆</title>
-    
-    <!-- 预加载关键资源 -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&display=swap" as="style">
-    <link rel="preload" href="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js" as="script">
-    
-    <!-- 内联关键CSS -->
     <style>
         * {
             margin: 0;
@@ -31,9 +25,24 @@
             background: radial-gradient(ellipse at center, #0a0e2a 0%, #050716 70%);
             color: #fff;
             position: relative;
+            overflow: hidden;
         }
 
-        /* 关键UI样式 - 其余样式通过外部加载 */
+        /* 科幻粒子背景 */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        @property --d {
+            syntax: '<angle>';
+            inherits: true;
+            initial-value: 0deg;
+        }
+
+        /* 启动界面样式 - 科幻风格 */
         .click_me_shell {
             margin: 0;
             display: flex;
@@ -66,6 +75,16 @@
             letter-spacing: 3px;
             position: relative;
             font-family: 'Orbitron', sans-serif;
+            animation: titleGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% {
+                text-shadow: 0 0 15px rgba(0, 195, 255, 0.7);
+            }
+            100% {
+                text-shadow: 0 0 25px rgba(0, 195, 255, 0.9), 0 0 40px rgba(0, 255, 149, 0.5);
+            }
         }
 
         .title::after {
@@ -89,6 +108,16 @@
             line-height: 1.6;
             font-family: 'Rajdhani', sans-serif;
             letter-spacing: 1px;
+            animation: subtitlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes subtitlePulse {
+            0%, 100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+            }
         }
 
         .click_me {
@@ -109,6 +138,16 @@
             text-align: center;
             padding: 20px;
             box-shadow: 0 0 30px rgba(0, 195, 255, 0.3);
+            animation: buttonFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes buttonFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .click_me:before {
@@ -151,6 +190,7 @@
         .click_me:hover {
             transform: scale(1.05);
             box-shadow: 0 0 50px rgba(0, 195, 255, 0.5);
+            animation: none;
         }
 
         .click_me:hover:after {
@@ -173,7 +213,17 @@
             font-family: 'Orbitron', sans-serif;
         }
 
-        /* 3D相册基础样式 */
+        /* 3D相册样式 - 科幻风格 */
+        .album-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
         #dragBox,
         .spinBox {
             position: relative;
@@ -221,13 +271,287 @@
             border: 1px solid rgba(0, 195, 255, 0.3);
         }
 
-        /* 基础动画 */
+        #dragBox img:hover {
+            box-shadow: 0 0 20px #00ff95;
+            transform: scale(1.08);
+            filter: brightness(1.1);
+            z-index: 10;
+            border-color: #00ff95;
+        }
+
+        /* 科幻数据面板 - 美化版 */
+        .data-panel {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: rgba(5, 15, 30, 0.7);
+            padding: 15px;
+            z-index: 5;
+            backdrop-filter: blur(10px);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 195, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 195, 255, 0.2);
+            min-width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .data-panel:hover {
+            box-shadow: 0 0 25px rgba(0, 195, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .data-panel h3 {
+            color: #00ff95;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(0, 195, 255, 0.3);
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .data-item {
+            margin: 8px 0;
+            font-size: 0.8rem;
+            color: #00c3ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .data-value {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* 图片查看模态框 - 科幻风格 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 5, 15, 0.95);
+            animation: fadeIn 0.4s;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(0, 195, 255, 0.6);
+            animation: zoomIn 0.4s;
+            border: 1px solid rgba(0, 195, 255, 0.5);
+        }
+
+        .close {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            color: #fff;
+            font-size: 45px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 101;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: rgba(0, 15, 30, 0.7);
+            border: 1px solid rgba(0, 195, 255, 0.3);
+        }
+
+        .close:hover {
+            color: #00ff95;
+            transform: scale(1.2) rotate(90deg);
+            background: rgba(0, 195, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 195, 255, 0.5);
+        }
+
+        .caption {
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+            padding: 15px;
+            background: rgba(0, 10, 25, 0.7);
+            backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(0, 195, 255, 0.3);
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        /* 控制按钮 - 科幻风格 - 美化版 */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 50;
+            background: rgba(5, 15, 30, 0.7);
+            padding: 15px 20px;
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 195, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 195, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .controls:hover {
+            box-shadow: 0 0 25px rgba(0, 195, 255, 0.4);
+            transform: translateX(-50%) translateY(-3px);
+        }
+
+        .control-btn {
+            background: rgba(0, 195, 255, 0.2);
+            border: 1px solid #00c3ff;
+            color: #00c3ff;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            min-width: 80px;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 149, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 195, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 195, 255, 0.4);
+            color: #00ff95;
+            border-color: #00ff95;
+        }
+
+        .control-btn:hover:before {
+            left: 100%;
+        }
+
+        /* 扫描线效果 */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.03) 50%,
+                rgba(255,255,255,0) 100%
+            );
+            background-size: 100% 4px;
+            z-index: 2;
+            pointer-events: none;
+            animation: scanline 10s linear infinite;
+        }
+
+        /* 心形动画 - 科幻风格 */
+        .heart {
+            width: 12px;
+            height: 12px;
+            position: fixed;
+            background: #00ff95;
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            pointer-events: none;
+            z-index: 99999;
+            opacity: 0.8;
+            box-shadow: 0 0 10px #00ff95;
+        }
+
+        .heart:after,
+        .heart:before {
+            content: '';
+            width: inherit;
+            height: inherit;
+            background: inherit;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            position: fixed;
+        }
+
+        .heart:after {
+            top: -6px;
+        }
+
+        .heart:before {
+            left: -6px;
+        }
+
+        /* 浮动粒子 */
+        .floating-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00c3ff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00c3ff;
+            z-index: 1;
+        }
+
+        /* 动画 */
         @keyframes spin {
             from {
                 transform: rotateY(0deg);
             }
             to {
                 transform: rotateY(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
             }
         }
 
@@ -240,7 +564,16 @@
             }
         }
 
-        /* 响应式设计基础 */
+        @keyframes scanline {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 0 100%;
+            }
+        }
+
+        /* 响应式设计 */
         @media (max-width: 768px) {
             .title {
                 font-size: 2.5rem;
@@ -261,14 +594,50 @@
                 width: 100px;
                 height: 120px;
             }
+            
+            .controls {
+                flex-wrap: wrap;
+                justify-content: center;
+                max-width: 90%;
+                gap: 10px;
+                padding: 12px 15px;
+            }
+            
+            .control-btn {
+                padding: 8px 12px;
+                font-size: 11px;
+                min-width: 70px;
+            }
+            
+            .data-panel {
+                top: 10px;
+                left: 10px;
+                padding: 12px;
+                min-width: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .controls {
+                gap: 8px;
+                padding: 10px 12px;
+            }
+            
+            .control-btn {
+                padding: 7px 10px;
+                font-size: 10px;
+                min-width: 65px;
+            }
+            
+            .data-panel {
+                min-width: 160px;
+            }
         }
     </style>
-    
-    <!-- 异步加载非关键CSS -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
-    
-    <!-- 异步加载粒子库 -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js" defer></script>
+    <!-- 引入粒子效果库 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- 引入科幻字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- 扫描线效果 -->
@@ -290,84 +659,88 @@
     <div class="click_me_shell" id="click_me_shell">
         <h1 class="title">数据档案：我们的回忆</h1>
         <p class="subtitle">量子存储系统准备中... 点击下方加载数据</p>
-        <audio loop src="img/Music.mp3" id="audio" preload="none"></audio>
+        <audio loop src="img/Music.mp3" id="audio" preload="auto"></audio>
         <button class="click_me">
             <span class="click_me_text">加载<br>记忆数据</span>
         </button>
     </div>
 
-    <!-- 3D相册 - 使用懒加载图片 -->
-    <div id="dragBox">
-        <div class="spinBox" id="spinBox">
-            <!-- 图片列表 - 使用data-src代替src -->
-            <img data-src="img/1.webp" alt="记忆数据片段 #001">
-            <img data-src="img/2.webp" alt="记忆数据片段 #002">
-            <img data-src="img/3.webp" alt="记忆数据片段 #003">
-            <img data-src="img/4.webp" alt="记忆数据片段 #004">
-            <img data-src="img/6.webp" alt="记忆数据片段 #006">
-            <img data-src="img/7.webp" alt="记忆数据片段 #007">
-            <img data-src="img/8.webp" alt="记忆数据片段 #008">
-            <img data-src="img/9.webp" alt="记忆数据片段 #009">
-            <img data-src="img/10.webp" alt="记忆数据片段 #010">
-            <img data-src="img/11.webp" alt="记忆数据片段 #011">
-            <img data-src="img/12.webp" alt="记忆数据片段 #012">
-            <img data-src="img/13.webp" alt="记忆数据片段 #013">
-            <img data-src="img/14.webp" alt="记忆数据片段 #014">
-            <img data-src="img/15.webp" alt="记忆数据片段 #015">
-            <img data-src="img/16.webp" alt="记忆数据片段 #016">
-            <img data-src="img/17.webp" alt="记忆数据片段 #017">
-            <img data-src="img/18.webp" alt="记忆数据片段 #018">
-            <img data-src="img/19.webp" alt="记忆数据片段 #019">
-            <img data-src="img/20.webp" alt="记忆数据片段 #020">
-            <img data-src="img/21.webp" alt="记忆数据片段 #021">
-        </div>
-        <div class="spinBox" id="spinBox2">
-            <!-- 图片列表 - 使用data-src代替src -->
-            <img data-src="img/2.webp" alt="记忆数据片段 #002">
-            <img data-src="img/3.webp" alt="记忆数据片段 #003">
-            <img data-src="img/4.webp" alt="记忆数据片段 #004">
-            <img data-src="img/6.webp" alt="记忆数据片段 #006">
-            <img data-src="img/7.webp" alt="记忆数据片段 #007">
-            <img data-src="img/8.webp" alt="记忆数据片段 #008">
-            <img data-src="img/9.webp" alt="记忆数据片段 #009">
-            <img data-src="img/10.webp" alt="记忆数据片段 #010">
-            <img data-src="img/11.webp" alt="记忆数据片段 #011">
-            <img data-src="img/12.webp" alt="记忆数据片段 #012">
-            <img data-src="img/13.webp" alt="记忆数据片段 #013">
-            <img data-src="img/14.webp" alt="记忆数据片段 #014">
-            <img data-src="img/15.webp" alt="记忆数据片段 #015">
-            <img data-src="img/16.webp" alt="记忆数据片段 #016">
-            <img data-src="img/17.webp" alt="记忆数据片段 #017">
-            <img data-src="img/18.webp" alt="记忆数据片段 #018">
-            <img data-src="img/19.webp" alt="记忆数据片段 #019">
-            <img data-src="img/20.webp" alt="记忆数据片段 #020">
-            <img data-src="img/21.webp" alt="记忆数据片段 #021">
-            <img data-src="img/1.webp" alt="记忆数据片段 #001">
-        </div>
-        <div class="spinBox" id="spinBox3">
-            <!-- 图片列表 - 使用data-src代替src -->
-            <img data-src="img/3.webp" alt="记忆数据片段 #003">
-            <img data-src="img/4.webp" alt="记忆数据片段 #004">
-            <img data-src="img/6.webp" alt="记忆数据片段 #006">
-            <img data-src="img/7.webp" alt="记忆数据片段 #007">
-            <img data-src="img/8.webp" alt="记忆数据片段 #008">
-            <img data-src="img/9.webp" alt="记忆数据片段 #009">
-            <img data-src="img/10.webp" alt="记忆数据片段 #010">
-            <img data-src="img/11.webp" alt="记忆数据片段 #011">
-            <img data-src="img/12.webp" alt="记忆数据片段 #012">
-            <img data-src="img/13.webp" alt="记忆数据片段 #013">
-            <img data-src="img/14.webp" alt="记忆数据片段 #014">
-            <img data-src="img/15.webp" alt="记忆数据片段 #015">
-            <img data-src="img/16.webp" alt="记忆数据片段 #016">
-            <img data-src="img/17.webp" alt="记忆数据片段 #017">
-            <img data-src="img/18.webp" alt="记忆数据片段 #018">
-            <img data-src="img/19.webp" alt="记忆数据片段 #019">
-            <img data-src="img/20.webp" alt="记忆数据片段 #020">
-            <img data-src="img/21.webp" alt="记忆数据片段 #021">
-            <img data-src="img/1.webp" alt="记忆数据片段 #001">
-            <img data-src="img/2.webp" alt="记忆数据片段 #002">
+    <!-- 3D相册容器 -->
+    <div class="album-container">
+        <!-- 3D相册 -->
+        <div id="dragBox">
+            <div class="spinBox" id="spinBox">
+                <!-- 图片列表 -->
+                <img src="img/1.webp" alt="记忆数据片段 #001">
+                <img src="img/2.webp" alt="记忆数据片段 #002">
+                <img src="img/3.webp" alt="记忆数据片段 #003">
+                <img src="img/4.webp" alt="记忆数据片段 #004">
+                <img src="img/6.webp" alt="记忆数据片段 #006">
+                <img src="img/7.webp" alt="记忆数据片段 #007">
+                <img src="img/8.webp" alt="记忆数据片段 #008">
+                <img src="img/9.webp" alt="记忆数据片段 #009">
+                <img src="img/10.webp" alt="记忆数据片段 #010">
+                <img src="img/11.webp" alt="记忆数据片段 #011">
+                <img src="img/12.webp" alt="记忆数据片段 #012">
+                <img src="img/13.webp" alt="记忆数据片段 #013">
+                <img src="img/14.webp" alt="记忆数据片段 #014">
+                <img src="img/15.webp" alt="记忆数据片段 #015">
+                <img src="img/16.webp" alt="记忆数据片段 #016">
+                <img src="img/17.webp" alt="记忆数据片段 #017">
+                <img src="img/18.webp" alt="记忆数据片段 #018">
+                <img src="img/19.webp" alt="记忆数据片段 #019">
+                <img src="img/20.webp" alt="记忆数据片段 #020">
+                <img src="img/21.webp" alt="记忆数据片段 #021">
+            </div>
+            <div class="spinBox" id="spinBox2">
+                <!-- 图片列表 -->
+                <img src="img/2.webp" alt="记忆数据片段 #002">
+                <img src="img/3.webp" alt="记忆数据片段 #003">
+                <img src="img/4.webp" alt="记忆数据片段 #004">
+                <img src="img/6.webp" alt="记忆数据片段 #006">
+                <img src="img/7.webp" alt="记忆数据片段 #007">
+                <img src="img/8.webp" alt="记忆数据片段 #008">
+                <img src="img/9.webp" alt="记忆数据片段 #009">
+                <img src="img/10.webp" alt="记忆数据片段 #010">
+                <img src="img/11.webp" alt="记忆数据片段 #011">
+                <img src="img/12.webp" alt="记忆数据片段 #012">
+                <img src="img/13.webp" alt="记忆数据片段 #013">
+                <img src="img/14.webp" alt="记忆数据片段 #014">
+                <img src="img/15.webp" alt="记忆数据片段 #015">
+                <img src="img/16.webp" alt="记忆数据片段 #016">
+                <img src="img/17.webp" alt="记忆数据片段 #017">
+                <img src="img/18.webp" alt="记忆数据片段 #018">
+                <img src="img/19.webp" alt="记忆数据片段 #019">
+                <img src="img/20.webp" alt="记忆数据片段 #020">
+                <img src="img/21.webp" alt="记忆数据片段 #021">
+                <img src="img/1.webp" alt="记忆数据片段 #001">
+            </div>
+            <div class="spinBox" id="spinBox3">
+                <!-- 图片列表 -->
+                <img src="img/3.webp" alt="记忆数据片段 #003">
+                <img src="img/4.webp" alt="记忆数据片段 #004">
+                <img src="img/6.webp" alt="记忆数据片段 #006">
+                <img src="img/7.webp" alt="记忆数据片段 #007">
+                <img src="img/8.webp" alt="记忆数据片段 #008">
+                <img src="img/9.webp" alt="记忆数据片段 #009">
+                <img src="img/10.webp" alt="记忆数据片段 #010">
+                <img src="img/11.webp" alt="记忆数据片段 #011">
+                <img src="img/12.webp" alt="记忆数据片段 #012">
+                <img src="img/13.webp" alt="记忆数据片段 #013">
+                <img src="img/14.webp" alt="记忆数据片段 #014">
+                <img src="img/15.webp" alt="记忆数据片段 #015">
+                <img src="img/16.webp" alt="记忆数据片段 #016">
+                <img src="img/17.webp" alt="记忆数据片段 #017">
+                <img src="img/18.webp" alt="记忆数据片段 #018">
+                <img src="img/19.webp" alt="记忆数据片段 #019">
+                <img src="img/20.webp" alt="记忆数据片段 #020">
+                <img src="img/21.webp" alt="记忆数据片段 #021">
+                <img src="img/1.webp" alt="记忆数据片段 #001">
+                <img src="img/2.webp" alt="记忆数据片段 #002">
+            </div>
         </div>
     </div>
+
     <!-- 图片查看模态框 -->
     <div id="imageModal" class="modal">
         <span class="close">&times;</span>
@@ -383,11 +756,6 @@
         <button class="control-btn" id="resetBtn">重置视角</button>
     </div>
 
-    <!-- 延迟加载非关键CSS -->
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600&display=swap">
-    </noscript>
-
     <script>
         // 初始化变量
         let radius = 560;
@@ -395,16 +763,17 @@
         let outDom = document.getElementById("dragBox");
         outDom.style.display = 'none';
 
-        // 图片懒加载函数
-        function lazyLoadImages() {
-            const images = document.querySelectorAll('#dragBox img[data-src]');
-            images.forEach(img => {
-                if (img.getAttribute('data-src')) {
-                    img.setAttribute('src', img.getAttribute('data-src'));
-                    img.removeAttribute('data-src');
-                }
-            });
-        }
+        let spinDom = document.getElementById("spinBox");
+        let spinDom2 = document.getElementById("spinBox2");
+        let spinDom3 = document.getElementById("spinBox3");
+
+        let aImg = spinDom.getElementsByTagName('img');
+        let aImg2 = spinDom2.getElementsByTagName('img');
+        let aImg3 = spinDom3.getElementsByTagName('img');
+
+        let aEle = [...aImg];
+        let aEle2 = [...aImg2];
+        let aEle3 = [...aImg3];
 
         // 设置图片位置和动画
         function setStyle(delayTime, dom, i, len) {
@@ -414,18 +783,6 @@
         }
 
         function init(delayTime) {
-            let spinDom = document.getElementById("spinBox");
-            let spinDom2 = document.getElementById("spinBox2");
-            let spinDom3 = document.getElementById("spinBox3");
-
-            let aImg = spinDom.getElementsByTagName('img');
-            let aImg2 = spinDom2.getElementsByTagName('img');
-            let aImg3 = spinDom3.getElementsByTagName('img');
-
-            let aEle = [...aImg];
-            let aEle2 = [...aImg2];
-            let aEle3 = [...aImg3];
-            
             for (let i = 0; i < aEle.length; i++) {
                 setStyle(delayTime, aEle[i], i, aEle.length)
             }
@@ -457,45 +814,40 @@
             let audio = document.getElementById('audio');
             audio.play();
             
-            // 加载图片
-            lazyLoadImages();
-            
             // 初始化粒子背景 - 科幻风格
-            if (typeof particlesJS !== 'undefined') {
-                particlesJS("particles-js", {
-                    particles: {
-                        number: { value: 80, density: { enable: true, value_area: 600 } },
-                        color: { value: "#00c3ff" },
-                        shape: { type: "circle" },
-                        opacity: { value: 0.5, random: true },
-                        size: { value: 2, random: true },
-                        line_linked: {
-                            enable: true,
-                            distance: 150,
-                            color: "#00ff95",
-                            opacity: 0.3,
-                            width: 1
-                        },
-                        move: {
-                            enable: true,
-                            speed: 3,
-                            direction: "none",
-                            random: true,
-                            straight: false,
-                            out_mode: "out",
-                            bounce: false
-                        }
+            particlesJS("particles-js", {
+                particles: {
+                    number: { value: 120, density: { enable: true, value_area: 800 } },
+                    color: { value: "#00c3ff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 2, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#00ff95",
+                        opacity: 0.3,
+                        width: 1
                     },
-                    interactivity: {
-                        detect_on: "canvas",
-                        events: {
-                            onhover: { enable: true, mode: "repulse" },
-                            onclick: { enable: true, mode: "push" },
-                            resize: true
-                        }
+                    move: {
+                        enable: true,
+                        speed: 3,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
                     }
-                });
-            }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    }
+                }
+            });
             
             // 添加心形动画 - 科幻风格
             ! function (e, t, a) {
@@ -551,7 +903,42 @@
                     ), n(), r()
             }(window, document);
             
+            // 添加浮动粒子
+            createFloatingParticles();
+            
             setTimeout(init, 1000);
+        }
+
+        // 创建浮动粒子效果
+        function createFloatingParticles() {
+            const container = document.querySelector('.album-container');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('floating-particle');
+                
+                // 随机位置
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                particle.style.left = `${x}%`;
+                particle.style.top = `${y}%`;
+                
+                // 随机大小和颜色
+                const size = Math.random() * 3 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // 随机颜色
+                const colors = ['#00c3ff', '#00ff95', '#ffffff'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = color;
+                particle.style.boxShadow = `0 0 10px ${color}`;
+                
+                // 随机动画
+                const duration = Math.random() * 20 + 10;
+                particle.style.animation = `float ${duration}s infinite linear`;
+                
+                container.appendChild(particle);
+            }
         }
 
         // 鼠标滚动事件
@@ -567,10 +954,6 @@
         // 暂停/开始旋转
         function playSpin(yes) {
             isPlaying = yes;
-            let spinDom = document.getElementById("spinBox");
-            let spinDom2 = document.getElementById("spinBox2");
-            let spinDom3 = document.getElementById("spinBox3");
-            
             spinDom.style.animationPlayState = (yes ? 'running' : 'paused');
             spinDom2.style.animationPlayState = (yes ? 'running' : 'paused');
             spinDom3.style.animationPlayState = (yes ? 'running' : 'paused');
@@ -692,19 +1075,6 @@
 
         // 初始化图片点击事件
         setTimeout(addImageClickEvents, 1500);
-        
-        // 加载剩余CSS
-        function loadRemainingCSS() {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'remaining-styles.css';
-            document.head.appendChild(link);
-        }
-        
-        // 页面加载完成后加载非关键CSS
-        window.addEventListener('load', function() {
-            loadRemainingCSS();
-        });
     </script>
 </body>
 </html>
