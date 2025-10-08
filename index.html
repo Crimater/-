@@ -279,6 +279,48 @@
             border-color: #00ff95;
         }
 
+        /* 悬浮标题样式 */
+        .floating-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateX(30deg);
+            text-align: center;
+            z-index: 5;
+            pointer-events: none;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .title-text {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00c3ff, #00ff95, #00c3ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(0, 195, 255, 0.7);
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .title-subtext {
+            font-size: 1.2rem;
+            color: rgba(0, 195, 255, 0.8);
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(-50%, -50%) rotateX(30deg) translateY(0);
+            }
+            50% {
+                transform: translate(-50%, -50%) rotateX(30deg) translateY(-10px);
+            }
+        }
+
         /* 科幻数据面板 - 美化版 */
         .data-panel {
             position: fixed;
@@ -615,6 +657,14 @@
                 padding: 12px;
                 min-width: 180px;
             }
+            
+            .title-text {
+                font-size: 2.5rem;
+            }
+            
+            .title-subtext {
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -631,6 +681,14 @@
             
             .data-panel {
                 min-width: 160px;
+            }
+            
+            .title-text {
+                font-size: 2rem;
+            }
+            
+            .title-subtext {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -667,6 +725,12 @@
 
     <!-- 3D相册容器 -->
     <div class="album-container">
+        <!-- 悬浮标题 -->
+        <div class="floating-title">
+            <div class="title-text">傻傻&乖乖</div>
+            <div class="title-subtext">数据档案</div>
+        </div>
+        
         <!-- 3D相册 -->
         <div id="dragBox">
             <div class="spinBox" id="spinBox">
@@ -675,6 +739,7 @@
                 <img src="img/2.webp" alt="记忆数据片段 #002">
                 <img src="img/3.webp" alt="记忆数据片段 #003">
                 <img src="img/4.webp" alt="记忆数据片段 #004">
+                <img src="img/5.webp" alt="记忆数据片段 #005">
                 <img src="img/6.webp" alt="记忆数据片段 #006">
                 <img src="img/7.webp" alt="记忆数据片段 #007">
                 <img src="img/8.webp" alt="记忆数据片段 #008">
@@ -697,6 +762,7 @@
                 <img src="img/2.webp" alt="记忆数据片段 #002">
                 <img src="img/3.webp" alt="记忆数据片段 #003">
                 <img src="img/4.webp" alt="记忆数据片段 #004">
+               <img src="img/5.webp" alt="记忆数据片段 #005">
                 <img src="img/6.webp" alt="记忆数据片段 #006">
                 <img src="img/7.webp" alt="记忆数据片段 #007">
                 <img src="img/8.webp" alt="记忆数据片段 #008">
@@ -719,6 +785,7 @@
                 <!-- 图片列表 -->
                 <img src="img/3.webp" alt="记忆数据片段 #003">
                 <img src="img/4.webp" alt="记忆数据片段 #004">
+                <img src="img/5.webp" alt="记忆数据片段 #005">
                 <img src="img/6.webp" alt="记忆数据片段 #006">
                 <img src="img/7.webp" alt="记忆数据片段 #007">
                 <img src="img/8.webp" alt="记忆数据片段 #008">
