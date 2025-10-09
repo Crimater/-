@@ -279,21 +279,16 @@
             border-color: #00ff95;
         }
 
-        /* 悬浮标题样式 - 位于3D空间内 */
-        .floating-title {
+        /* 固定标题样式 - 位于3D空间外，不旋转 */
+        .fixed-title {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            transform: translateZ(0); /* 放置在3D空间中心 */
             pointer-events: none;
-            z-index: 0; /* 比图片的z-index低 */
+            z-index: 2;
+            display: none;
         }
 
         .title-text {
@@ -307,7 +302,7 @@
             margin-bottom: 0.5rem;
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 2px;
-            white-space: nowrap; /* 防止换行 */
+            white-space: nowrap;
         }
 
         .title-subtext {
@@ -316,7 +311,7 @@
             font-family: 'Rajdhani', sans-serif;
             letter-spacing: 3px;
             text-transform: uppercase;
-            white-space: nowrap; /* 防止换行 */
+            white-space: nowrap;
         }
 
         /* 科幻数据面板 - 美化版 */
@@ -658,12 +653,12 @@
             
             .title-text {
                 font-size: 2.5rem;
-                white-space: nowrap; /* 确保移动端也不换行 */
+                white-space: nowrap;
             }
             
             .title-subtext {
                 font-size: 1rem;
-                white-space: nowrap; /* 确保移动端也不换行 */
+                white-space: nowrap;
             }
         }
 
@@ -685,12 +680,12 @@
             
             .title-text {
                 font-size: 2rem;
-                white-space: nowrap; /* 确保小屏幕也不换行 */
+                white-space: nowrap;
             }
             
             .title-subtext {
                 font-size: 0.9rem;
-                white-space: nowrap; /* 确保小屏幕也不换行 */
+                white-space: nowrap;
             }
         }
 
@@ -738,16 +733,16 @@
         </button>
     </div>
 
+    <!-- 固定标题 - 不旋转 -->
+    <div class="fixed-title" id="fixedTitle">
+        <div class="title-text">傻傻 💞 乖乖</div>
+        <div class="title-subtext">2024年02月03日</div>
+    </div>
+
     <!-- 3D相册容器 -->
     <div class="album-container">
         <!-- 3D相册 -->
         <div id="dragBox">
-            <!-- 悬浮标题 - 现在在3D空间内 -->
-            <div class="floating-title">
-                <div class="title-text">傻傻 💞 乖乖</div>
-                <div class="title-subtext">2024年02月03日</div>
-            </div>
-            
             <div class="spinBox" id="spinBox">
                 <!-- 图片列表 -->
                 <img src="img/1.webp" alt="记忆数据片段 #001">
@@ -891,6 +886,7 @@
             setTimeout(() => {
                 click_me_shell.style.display = 'none';
                 outDom.style.display = '';
+                document.getElementById('fixedTitle').style.display = 'block'; // 显示固定标题
             }, 1000);
             
             let audio = document.getElementById('audio');
